@@ -69,18 +69,20 @@ var HomePage = (function () {
         this.teamTwo = 0;
         this.seleccionatBasa = document.getElementById("seleccionatBasa");
         this.basaSortidaGuanyador = document.getElementById("basaSortidaGuanyador");
+        this.count = 0;
+        this.winner = {};
+        this.puntuacioTeamA = document.getElementById("puntuacioTeamA");
+        this.puntuacioTeamB = document.getElementById("puntuacioTeamB");
         this._iniciPartidaHelper.repartirCartaInitial();
         setTimeout(function () {
             _this.myCards();
         }, 4000);
     }
-    ;
     HomePage.prototype.myCards = function () {
         var _this = this;
         for (var x = 0; x < this._iniciPartidaHelper.jugador_1_tu.length; x++) {
             this.card = document.createElement('div');
             this.card.innerHTML = this._iniciPartidaHelper.jugador_1_tu[x].valor;
-            console.log(this._iniciPartidaHelper.jugador_1_tu[x]);
             this._cardHelper.setAttributes(this.card, {
                 'data-pal': this._iniciPartidaHelper.jugador_1_tu[x].pal,
                 'data-val': this._iniciPartidaHelper.jugador_1_tu[x].valor,
@@ -89,15 +91,15 @@ var HomePage = (function () {
             });
             this.tapete = document.getElementById('user1');
             this.tapete.appendChild(this.card);
-            this.card.addEventListener('click', function () {
+            this.card.addEventListener('click', function (evt) {
                 var val, punt, pal;
-                val = _this.card.getAttribute('data-val');
-                punt = _this.card.getAttribute('data-punt');
-                pal = _this.card.getAttribute('data-pal');
+                val = evt.target.getAttribute('data-val');
+                punt = evt.target.getAttribute('data-punt');
+                pal = evt.target.getAttribute('data-pal');
                 console.log(val);
                 for (var x_1 = 0; x_1 < _this._iniciPartidaHelper.jugador_1_tu.length; x_1++) {
                     if (_this._iniciPartidaHelper.jugador_1_tu[x_1].pal == pal && _this._iniciPartidaHelper.jugador_1_tu[x_1].valor == val) {
-                        var rem = _this._iniciPartidaHelper.jugador_1_tu.indexOf(_this._iniciPartidaHelper.jugador_1_tu[x_1]);
+                        _this.rem = _this._iniciPartidaHelper.jugador_1_tu.indexOf(_this._iniciPartidaHelper.jugador_1_tu[x_1]);
                     }
                 }
                 if (pal == _this._palo && punt > _this._punt) {
@@ -124,14 +126,180 @@ var HomePage = (function () {
                     _this._valor = val;
                     _this._punt = punt;
                     _this._palo = pal;
-                    // showCard(this._iniciPartidaHelper.jugador_1_tu, 'tu', val, punt, pal, this.rem);
+                    _this.showCard(_this._iniciPartidaHelper.jugador_1_tu, 'tu', val, punt, pal, _this.rem);
                     // this.remove();
                 }
                 else {
-                    // showCard(this._iniciPartidaHelper.jugador_1_tu, 'tu', val, punt, pal, this.rem);
+                    _this.showCard(_this._iniciPartidaHelper.jugador_1_tu, 'tu', val, punt, pal, _this.rem);
                     // this.remove();
                 }
             });
+        }
+    };
+    HomePage.prototype.showCard = function (player, position, value, punt, pal, removedcard) {
+        player.splice(removedcard, 1);
+        //Check and reset count
+        this.count == 4 ? this.count = 1 : this.count += 1;
+        this.winner[position] = parseInt(punt);
+        this.userSelected = document.getElementById(position);
+        this.userSelected.innerHTML === '' ? this.userSelected.innerHTML = value : this.userSelected.innerHTML = '', this.userSelected.innerHTML = value;
+        this._cardHelper.setAttributes(this.userSelected, {
+            'data-card': value,
+            'class': 'tapetejugada carta __' + pal
+        });
+        console.log(this.userSelected);
+        this.nextHandSelect(this.count, position, value, punt, pal);
+    };
+    HomePage.prototype.nextHandSelect = function (count, position, value, punt, pal) {
+        if (count < 4) {
+            switch (position) {
+                case 'tu':
+                    this.nextHand(this._iniciPartidaHelper.jugador_3_dreta, 'dreta', value, punt, pal);
+                    break;
+                case 'dreta':
+                    this.nextHand(this._iniciPartidaHelper.jugador_4_dalt, 'dalt', value, punt, pal);
+                    break;
+                case 'dalt':
+                    this.nextHand(this._iniciPartidaHelper.jugador_2_esquerra, 'esquerra', value, punt, pal);
+                    break;
+            }
+        }
+        else {
+            this.andTheWinnerIs();
+        }
+    };
+    HomePage.prototype.nextHand = function (user, position, value, punt, pal) {
+        var _this = this;
+        setTimeout(function () {
+            _this.startPlay(user, position, value, punt, pal);
+        }, 2000);
+    };
+    HomePage.prototype.startPlay = function (user, position, value, punt, pal) {
+        var _this = this;
+        var newCard, _removecard, randomVal, randomValAndPal, _val;
+        var cartaguanyadora = false;
+        //Crear primera posibilitat
+        newCard = user.filter(function (el) {
+            if (el.pal == _this._paldejugada && el.puntuacio > punt) {
+                return (el.pal == _this._paldejugada && el.puntuacio > punt);
+            }
+            else {
+                if (el.pal == _this._paldejugada && el.puntuacio <= punt) {
+                    return (el.pal == _this._paldejugada && el.puntuacio <= punt);
+                }
+                else if (el.pal == _this._triomf && el.puntuacio > punt) {
+                    return (el.pal == _this._triomf && el.valor == value);
+                }
+            }
+        });
+        //Crear segona posibilitat basat en la primera
+        for (var w = 0; w < newCard.length; w++) {
+            if (newCard[w].puntuacio > this._punt) {
+                newCard = newCard.filter(function (el) { return (el.puntuacio > punt); });
+                cartaguanyadora = true;
+            }
+            else if (newCard[w].puntuacio < this._punt && newCard[w].pal == this._palo) {
+                newCard = newCard.filter(function (el) { return (el.puntuacio < _this._punt && el.pal == _this._palo); });
+            }
+            else if (newCard[w].pal != this._palo && newCard[w].pal == this._triomf && newCard[w].puntuacio == this._punt) {
+                newCard = newCard.filter(function (el) { return (el.pal != _this._palo && el.pal == _this._triomf); });
+            }
+        }
+        //De las cartes seleccionades segons probabilitat, escollir una
+        randomVal = Math.floor(Math.random() * newCard.length);
+        randomValAndPal = Math.floor(Math.random() * user.length);
+        _val = newCard[randomVal];
+        if (_val) {
+            if (cartaguanyadora) {
+                this._valor = _val.valor;
+                this._punt = _val.puntuacio;
+                this._palo = _val.pal;
+            }
+            _removecard = user.indexOf(_val);
+            this.showCard(user, position, _val.valor, _val.puntuacio, _val.pal, _removecard);
+        }
+        else {
+            _val = user[randomValAndPal];
+            _removecard = user.indexOf(_val);
+            this.showCard(user, position, _val.valor, _val.puntuacio, _val.pal, _removecard);
+        }
+    };
+    // Escollir guanyador ::TODO Refactor this!!
+    HomePage.prototype.andTheWinnerIs = function () {
+        var _this = this;
+        this.premi = this.winner.dreta + this.winner.tu + this.winner.esquerra + this.winner.dalt;
+        if (this._triomf == 'butifarra') {
+            this.premi = (this.premi * 2) + 1;
+        }
+        if (this.winner.tu > this.winner.dreta && this.winner.tu > this.winner.esquerra && this.winner.tu > this.winner.dalt) {
+            this.flagMeWinner = true;
+            this.teamOne += this.premi;
+            this.teamOne += 1;
+        }
+        else if (this.winner.dreta > this.winner.tu && this.winner.dreta > this.winner.esquerra && this.winner.dreta > this.winner.dalt) {
+            this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_3_dreta, "dreta");
+            this.teamTwo += this.premi;
+            this.teamTwo += 1;
+        }
+        else if (this.winner.esquerra > this.winner.tu && this.winner.esquerra > this.winner.dreta && this.winner.esquerra > this.winner.dalt) {
+            this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_2_esquerra, "esquerra");
+            this.teamTwo += this.premi;
+            this.teamTwo += 1;
+        }
+        else {
+            this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_4_dalt, "dalt");
+            this.teamOne += this.premi;
+            this.teamOne += 1;
+        }
+        this.winner = {};
+        setTimeout(function () {
+            _this._cardHelper.cleanTapete();
+            _this.penalitzacio = "";
+        }, 3000);
+        this.puntuacioTeamA === '' ? this.puntuacioTeamA = "Puntuacio equip A " + this.teamOne : this.puntuacioTeamA = '', this.puntuacioTeamA = "Puntuacio equip A " + this.teamOne;
+        this.puntuacioTeamB === '' ? this.puntuacioTeamB = "Puntuacio equip B " + this.teamTwo : this.puntuacioTeamB = '', this.puntuacioTeamB = "Puntuacio equip B " + this.teamTwo;
+    };
+    HomePage.prototype.sortidaDeCartaGuanyadora = function (user, position) {
+        var _this = this;
+        console.log('USERUSER: ', user);
+        this.flagMeWinner = false;
+        if (user.length != 0) {
+            setTimeout(function () {
+                var firstcard = user[Math.floor(Math.random() * user.length)];
+                _this._valor = firstcard.valor;
+                _this._punt = firstcard.puntuacio;
+                _this._palo = firstcard.pal;
+                _this._paldejugada = firstcard.pal;
+                _this.seleccionatBasa = 'EL PAL DE SORTIDA ES ' + _this._paldejugada;
+                _this.showCard(user, position, firstcard.valor, firstcard.puntuacio, firstcard.pal, user.indexOf(firstcard));
+                _this.basaSortidaGuanyador === '' ? _this.basaSortidaGuanyador = "Jugador de sortida " + position : _this.basaSortidaGuanyador = '', _this.basaSortidaGuanyador = "Jugador de sortida " + position;
+            }, 4000);
+        }
+        else {
+            if (this.teamOne >= 101 || this.teamTwo >= 101) {
+                this.teamOne >= 101 ? alert('GAME OVER! TeamOne (tu i dalt) GUANYADORS!!') : alert('GAME OVER! TeamTwo (esquerra i dreta) GUANYADORS!!');
+                // novaPartida.style.display = 'block';
+                // novaPartida.addEventListener("click", function(){
+                //   cleanInfo();
+                //   NewGame();
+                // })
+            }
+            else {
+                switch (user) {
+                    case this._iniciPartidaHelper.jugador_1_tu:
+                        this._iniciPartidaHelper.initGame(1);
+                        break;
+                    case this._iniciPartidaHelper.jugador_2_esquerra:
+                        this._iniciPartidaHelper.initGame(2);
+                        break;
+                    case this._iniciPartidaHelper.jugador_3_dreta:
+                        this._iniciPartidaHelper.initGame(3);
+                        break;
+                    case this._iniciPartidaHelper.jugador_4_dalt:
+                        this._iniciPartidaHelper.initGame(4);
+                        break;
+                }
+            }
         }
     };
     HomePage = __decorate([
@@ -213,6 +381,17 @@ var CardHelper = (function () {
     CardHelper.prototype.setAttributes = function (el, attrs) {
         for (var key in attrs) {
             el.setAttribute(key, attrs[key]);
+        }
+    };
+    //Netejar cartes de la taula
+    CardHelper.prototype.cleanTapete = function () {
+        console.log('calling this');
+        var cleaner, palsId = ['dreta', 'esquerra', 'dalt', 'tu'];
+        for (var t = 0; t < palsId.length; t++) {
+            cleaner = document.getElementById(palsId[t]);
+            cleaner.innerHTML = '';
+            cleaner.setAttribute('data-card', '');
+            cleaner.setAttribute('class', 'tapetejugada carta');
         }
     };
     CardHelper = __decorate([

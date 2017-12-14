@@ -59,15 +59,16 @@ export class CardHelper {
     }
 
     //Netejar cartes de la taula
-    //    cleanTapete(){
-    //      let cleaner, palsId = ['dreta', 'esquerra', 'dalt', 'tu'];
-    //      for (let t = 0; t < palsId.length; t++){
-    //        cleaner = document.getElementById(palsId[t]);
-    //        cleaner.innerHTML = '';
-    //        cleaner.setAttribute('data-card' , '')
-    //        cleaner.setAttribute('class' , 'tapetejugada carta')
-    //      }
-    //    }
+       cleanTapete(){
+           console.log('calling this');
+         let cleaner, palsId = ['dreta', 'esquerra', 'dalt', 'tu'];
+         for (let t = 0; t < palsId.length; t++){
+           cleaner = document.getElementById(palsId[t]);
+           cleaner.innerHTML = '';
+           cleaner.setAttribute('data-card' , '')
+           cleaner.setAttribute('class' , 'tapetejugada carta')
+         }
+       }
 
     //Netejar informacio de partida
     //   cleanInfo(){
