@@ -10,4 +10,14 @@
   <p>
     {{jugadorSortida}}
   </p>
+  <div id="seleccionat" class="pal-seleccionat">{{pal_seleccionat}}</div>
+  <div id="seleccionatPosition" class="pal-seleccionat">{{pal_posicio}}</div>
+  <section class="seleccio" *ngIf="seleccioInit">
+    <h3>Selecciona Triomf</h3>
+    <div class="pals_triomf" (click)="palSeleccionat('oros')">OROS</div>
+    <div class="pals_triomf" (click)="palSeleccionat('copes')">COPES</div>
+    <div class="pals_triomf" (click)="palSeleccionat('espasses')">ESPASSES</div>
+    <div class="pals_triomf" (click)="palSeleccionat('bastos')">BASTOS</div>
+    <div class="pals_triomf" (click)="palSeleccionat('butifarra')">BUTIFARRA</div>
+  </section>
 </ion-content>

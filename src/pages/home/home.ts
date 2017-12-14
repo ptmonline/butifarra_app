@@ -16,6 +16,14 @@ export class HomePage {
   public jugador_3_dreta: any;
   public jugador_4_dalt: any;
 
+  public jugadorDeInici:string;
+  public triomfPals:any;
+  public _triomf: string;
+  public pal: string;
+  public seleccioInit: boolean = true;
+  public pal_seleccionat: string;
+  public pal_posicio: string;
+
   constructor(public navCtrl: NavController, public _cardHelper: CardHelper) {
     this.repartirCartaInitial();
   }
@@ -65,26 +73,21 @@ export class HomePage {
   initGame(numb) {
 
     this.jugadorSortida = 'jugador numero ' + numb;
-    console.log('NUMERO: ', numb)
     this._cardHelper.shuffle(this._cardHelper.pilot)
     //Distribueix cartes
     this.jugador_1_tu = this._cardHelper.pilot.slice(0, 12);
     this._cardHelper.ordenarCartesPerValor(this.jugador_1_tu);
-    console.log('USER1 : ',this.jugador_1_tu)
     this.jugador_2_esquerra = this._cardHelper.pilot.slice(12, 24);
     this._cardHelper.ordenarCartesPerValor(this.jugador_2_esquerra);
-    console.log('USER2 : ',this.jugador_2_esquerra)
     this.jugador_3_dreta = this._cardHelper.pilot.slice(24, 36);
     this._cardHelper.ordenarCartesPerValor(this.jugador_3_dreta);
-    console.log('USER3 : ',this.jugador_3_dreta)
     this.jugador_4_dalt = this._cardHelper.pilot.slice(36, 48);
     this._cardHelper.ordenarCartesPerValor(this.jugador_4_dalt);
-    console.log('USER4 : ',this.jugador_4_dalt)
 
-    // if (numb == 1) repartirAndEscollir(user1, 'tu')
-    // if (numb == 2) repartirAndEscollir(user2, 'esquerra')
-    // if (numb == 3) repartirAndEscollir(user3, 'dreta')
-    // if (numb == 4) repartirAndEscollir(user4, 'dalt')
+    if (numb == 1) this.repartirAndEscollir(this.jugador_1_tu, 'tu')
+    if (numb == 2) this.repartirAndEscollir(this.jugador_2_esquerra, 'esquerra')
+    if (numb == 3) this.repartirAndEscollir(this.jugador_3_dreta, 'dreta')
+    if (numb == 4) this.repartirAndEscollir(this.jugador_4_dalt, 'dalt')
 
 
     //  setTimeout(function(){
@@ -92,4 +95,29 @@ export class HomePage {
     //  },4000)
   }
 
+  repartirAndEscollir(user, position){
+    user == this.jugador_4_dalt ? this.jugadorDeInici = 'company' : this.jugadorDeInici = 'contrari'
+    if(user != this.jugador_1_tu){
+      let counts = {};
+      user.forEach((x)=> {
+        counts[x.pal] = (counts[x.pal] || 0)+1;
+        if(counts[x.pal] >= 4 ){
+          this.createTriomfSign(x.pal, position)
+        }
+      });
+    //  sortidaDeCartaGuanyadora(user, position)
+    }
+  }
+
+  palSeleccionat(palseleccionat){
+    this.pal =  palseleccionat;
+    this.createTriomfSign(this.pal, 'tu')
+  }
+
+  createTriomfSign(pal, position){
+    this.seleccioInit = false;
+    this.pal_seleccionat = 'TRIOMF ESCOLLIT PER JUGADOR ' + position;
+    this.pal_posicio = 'EL TRIOMF ES: ' + pal;
+    this._triomf = this.pal;
+ }
 }

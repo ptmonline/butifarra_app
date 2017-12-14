@@ -54,10 +54,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+// import _ from 'lodash';
 var HomePage = (function () {
     function HomePage(navCtrl, _cardHelper) {
         this.navCtrl = navCtrl;
         this._cardHelper = _cardHelper;
+        this.seleccioInit = true;
         this.repartirCartaInitial();
     }
     HomePage.prototype.repartirCartaInitial = function () {
@@ -94,32 +96,55 @@ var HomePage = (function () {
     };
     HomePage.prototype.initGame = function (numb) {
         this.jugadorSortida = 'jugador numero ' + numb;
-        console.log('NUMERO: ', numb);
         this._cardHelper.shuffle(this._cardHelper.pilot);
         //Distribueix cartes
         this.jugador_1_tu = this._cardHelper.pilot.slice(0, 12);
         this._cardHelper.ordenarCartesPerValor(this.jugador_1_tu);
-        console.log('USER1 : ', this.jugador_1_tu);
         this.jugador_2_esquerra = this._cardHelper.pilot.slice(12, 24);
         this._cardHelper.ordenarCartesPerValor(this.jugador_2_esquerra);
-        console.log('USER2 : ', this.jugador_2_esquerra);
         this.jugador_3_dreta = this._cardHelper.pilot.slice(24, 36);
         this._cardHelper.ordenarCartesPerValor(this.jugador_3_dreta);
-        console.log('USER3 : ', this.jugador_3_dreta);
         this.jugador_4_dalt = this._cardHelper.pilot.slice(36, 48);
         this._cardHelper.ordenarCartesPerValor(this.jugador_4_dalt);
-        console.log('USER4 : ', this.jugador_4_dalt);
-        // if (numb == 1) repartirAndEscollir(user1, 'tu')
-        // if (numb == 2) repartirAndEscollir(user2, 'esquerra')
-        // if (numb == 3) repartirAndEscollir(user3, 'dreta')
-        // if (numb == 4) repartirAndEscollir(user4, 'dalt')
+        if (numb == 1)
+            this.repartirAndEscollir(this.jugador_1_tu, 'tu');
+        if (numb == 2)
+            this.repartirAndEscollir(this.jugador_2_esquerra, 'esquerra');
+        if (numb == 3)
+            this.repartirAndEscollir(this.jugador_3_dreta, 'dreta');
+        if (numb == 4)
+            this.repartirAndEscollir(this.jugador_4_dalt, 'dalt');
         //  setTimeout(function(){
         //    myCards();
         //  },4000)
     };
+    HomePage.prototype.repartirAndEscollir = function (user, position) {
+        var _this = this;
+        user == this.jugador_4_dalt ? this.jugadorDeInici = 'company' : this.jugadorDeInici = 'contrari';
+        if (user != this.jugador_1_tu) {
+            var counts_1 = {};
+            user.forEach(function (x) {
+                counts_1[x.pal] = (counts_1[x.pal] || 0) + 1;
+                if (counts_1[x.pal] >= 4) {
+                    _this.createTriomfSign(x.pal, position);
+                }
+            });
+            //  sortidaDeCartaGuanyadora(user, position)
+        }
+    };
+    HomePage.prototype.palSeleccionat = function (palseleccionat) {
+        this.pal = palseleccionat;
+        this.createTriomfSign(this.pal, 'tu');
+    };
+    HomePage.prototype.createTriomfSign = function (pal, position) {
+        this.seleccioInit = false;
+        this.pal_seleccionat = 'TRIOMF ESCOLLIT PER JUGADOR ' + position;
+        this.pal_posicio = 'EL TRIOMF ES: ' + pal;
+        this._triomf = this.pal;
+    };
     HomePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-home',template:/*ion-inline-start:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/`<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Ionic Blank\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <p>\n\n    {{jugadorSortida}}\n\n  </p>\n\n</ion-content>\n\n`/*ion-inline-end:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/,
+            selector: 'page-home',template:/*ion-inline-start:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/`<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Ionic Blank\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <p>\n\n    {{jugadorSortida}}\n\n  </p>\n\n  <div id="seleccionat" class="pal-seleccionat">{{pal_seleccionat}}</div>\n\n  <div id="seleccionatPosition" class="pal-seleccionat">{{pal_posicio}}</div>\n\n  <section class="seleccio" *ngIf="seleccioInit">\n\n    <h3>Selecciona Triomf</h3>\n\n    <div class="pals_triomf" (click)="palSeleccionat(\'oros\')">OROS</div>\n\n    <div class="pals_triomf" (click)="palSeleccionat(\'copes\')">COPES</div>\n\n    <div class="pals_triomf" (click)="palSeleccionat(\'espasses\')">ESPASSES</div>\n\n    <div class="pals_triomf" (click)="palSeleccionat(\'bastos\')">BASTOS</div>\n\n    <div class="pals_triomf" (click)="palSeleccionat(\'butifarra\')">BUTIFARRA</div>\n\n  </section>\n\n</ion-content>\n\n`/*ion-inline-end:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/,
             providers: [__WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */]]
         }),
         __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */]) === "function" && _b || Object])
