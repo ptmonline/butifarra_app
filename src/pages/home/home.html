@@ -8,16 +8,33 @@
 
 <ion-content padding>
   <p>
-    {{jugadorSortida}}
+    {{_iniciPartidaHelper.jugadorSortida}}
   </p>
-  <div id="seleccionat" class="pal-seleccionat">{{pal_seleccionat}}</div>
-  <div id="seleccionatPosition" class="pal-seleccionat">{{pal_posicio}}</div>
-  <section class="seleccio" *ngIf="seleccioInit">
-    <h3>Selecciona Triomf</h3>
-    <div class="pals_triomf" (click)="palSeleccionat('oros')">OROS</div>
-    <div class="pals_triomf" (click)="palSeleccionat('copes')">COPES</div>
-    <div class="pals_triomf" (click)="palSeleccionat('espasses')">ESPASSES</div>
-    <div class="pals_triomf" (click)="palSeleccionat('bastos')">BASTOS</div>
-    <div class="pals_triomf" (click)="palSeleccionat('butifarra')">BUTIFARRA</div>
+  <aside class="texte-seleccio">
+    <h3>L A &nbsp;&nbsp;B U T I F A R R A</h3>
+    <div id="seleccionat" class="pal-seleccionat">{{_iniciPartidaHelper.pal_seleccionat}}</div>
+    <div id="seleccionatPosition" class="pal-seleccionat">{{_iniciPartidaHelper.pal_posicio}}</div>
+    <div id="seleccionatBasa" class="pal-seleccionat">{{seleccionatBasa}}</div>
+    <div id="basaSortidaGuanyador" class="pal-seleccionat">{{basaSortidaGuanyador}}</div>
+    <div id="puntuacioTeamA" class="pal-seleccionat">&nbsp;</div>
+    <div id="puntuacioTeamB" class="pal-seleccionat">&nbsp;</div>
+    <div id="penalitzacio" class="pal-seleccionat">{{penalitzacio}}</div>
+    <div id="novaPartida" class="pal-seleccionat">clickar per a nova partida</div>
+  </aside>
+  <section class="jugada">
+    <div id="esquerra" class="tapetejugada carta"></div>
+    <div id="dreta" class="tapetejugada carta"></div>
+    <div id="dalt" class="tapetejugada carta"></div>
+    <div id="tu" class="tapetejugada carta"></div>
   </section>
+  <section class="seleccio" *ngIf="_iniciPartidaHelper.seleccioInit">
+    <h3>Selecciona Triomf</h3>
+    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat('oros')">OROS</div>
+    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat('copes')">COPES</div>
+    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat('espasses')">ESPASSES</div>
+    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat('bastos')">BASTOS</div>
+    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat('butifarra')">BUTIFARRA</div>
+  </section>
+  <section id="user1"></section>
+
 </ion-content>

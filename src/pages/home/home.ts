@@ -1,123 +1,93 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { CardHelper } from '../helpers/card.helper';
+import { IniciPartidaHelper } from '../helpers/inicipartida.helper';
 // import _ from 'lodash';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
-  providers: [CardHelper]
+  providers: [CardHelper, IniciPartidaHelper]
 })
 export class HomePage {
 
-  jugadorSortida: string;
-  public jugador_1_tu: any;
-  public jugador_2_esquerra: any;
-  public jugador_3_dreta: any;
-  public jugador_4_dalt: any;
-
-  public jugadorDeInici:string;
-  public triomfPals:any;
+  public card: any;
+  public tapete: any;;
+  public _paldejugada: string;
+  public _valor: any;
+  public _punt: any;
+  public _palo: string;
+  public flagMeWinner: boolean = true;
   public _triomf: string;
-  public pal: string;
-  public seleccioInit: boolean = true;
-  public pal_seleccionat: string;
-  public pal_posicio: string;
+  public penalitzacio: any = document.getElementById("penalitzacio");
+  public teamOne: number = 0;
+  public teamTwo: number = 0;
+  public seleccionatBasa: any = document.getElementById("seleccionatBasa");
+  public basaSortidaGuanyador: any = document.getElementById("basaSortidaGuanyador");
 
-  constructor(public navCtrl: NavController, public _cardHelper: CardHelper) {
-    this.repartirCartaInitial();
+  constructor(public navCtrl: NavController, public _cardHelper: CardHelper, public _iniciPartidaHelper: IniciPartidaHelper) {
+    this._iniciPartidaHelper.repartirCartaInitial();
+    setTimeout(() => {
+      this.myCards();
+    }, 4000)
   }
 
-  repartirCartaInitial() {
-    let sortida = ['oros', 'espasses', 'copes', 'bastos'],
-      cartaDeSortida = this._cardHelper.pilot.slice(Math.floor(Math.random() * 48))[0];
+  myCards() {
+    for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.length; x++) {
+      this.card = document.createElement('div');
+      this.card.innerHTML = this._iniciPartidaHelper.jugador_1_tu[x].valor;
+      console.log(this._iniciPartidaHelper.jugador_1_tu[x])
+      this._cardHelper.setAttributes(this.card, {
+        'data-pal': this._iniciPartidaHelper.jugador_1_tu[x].pal,
+        'data-val': this._iniciPartidaHelper.jugador_1_tu[x].valor,
+        'data-punt': this._iniciPartidaHelper.jugador_1_tu[x].puntuacio,
+        'class': 'tapetejugada carta __' + this._iniciPartidaHelper.jugador_1_tu[x].pal
+      })
 
-    this._cardHelper.shuffle(sortida);
-
-    this.jugador_1_tu = sortida[0];
-    this.jugador_2_esquerra = sortida[1];
-    this.jugador_3_dreta = sortida[2];
-    this.jugador_4_dalt = sortida[3];
-
-
-    this._cardHelper.shuffle(this._cardHelper.pilot);
-
-    cartaDeSortida = cartaDeSortida.pal;
-    console.log('cartaDeSortida: ', cartaDeSortida);
-
-    this.sortidaInitial(cartaDeSortida);
-
-  }
-
-  sortidaInitial(pal) {
-    switch (pal) {
-      case this.jugador_1_tu: {
-        this.initGame(1);
-        break;
-      }
-      case this.jugador_2_esquerra: {
-        this.initGame(2);
-        break;
-      }
-      case this.jugador_3_dreta: {
-        this.initGame(3);
-        break;
-      }
-      case this.jugador_4_dalt: {
-        this.initGame(4);
-        break;
-      }
-    }
-  }
-
-  initGame(numb) {
-
-    this.jugadorSortida = 'jugador numero ' + numb;
-    this._cardHelper.shuffle(this._cardHelper.pilot)
-    //Distribueix cartes
-    this.jugador_1_tu = this._cardHelper.pilot.slice(0, 12);
-    this._cardHelper.ordenarCartesPerValor(this.jugador_1_tu);
-    this.jugador_2_esquerra = this._cardHelper.pilot.slice(12, 24);
-    this._cardHelper.ordenarCartesPerValor(this.jugador_2_esquerra);
-    this.jugador_3_dreta = this._cardHelper.pilot.slice(24, 36);
-    this._cardHelper.ordenarCartesPerValor(this.jugador_3_dreta);
-    this.jugador_4_dalt = this._cardHelper.pilot.slice(36, 48);
-    this._cardHelper.ordenarCartesPerValor(this.jugador_4_dalt);
-
-    if (numb == 1) this.repartirAndEscollir(this.jugador_1_tu, 'tu')
-    if (numb == 2) this.repartirAndEscollir(this.jugador_2_esquerra, 'esquerra')
-    if (numb == 3) this.repartirAndEscollir(this.jugador_3_dreta, 'dreta')
-    if (numb == 4) this.repartirAndEscollir(this.jugador_4_dalt, 'dalt')
-
-
-    //  setTimeout(function(){
-    //    myCards();
-    //  },4000)
-  }
-
-  repartirAndEscollir(user, position){
-    user == this.jugador_4_dalt ? this.jugadorDeInici = 'company' : this.jugadorDeInici = 'contrari'
-    if(user != this.jugador_1_tu){
-      let counts = {};
-      user.forEach((x)=> {
-        counts[x.pal] = (counts[x.pal] || 0)+1;
-        if(counts[x.pal] >= 4 ){
-          this.createTriomfSign(x.pal, position)
+      this.tapete = document.getElementById('user1');
+      this.tapete.appendChild(this.card);
+      this.card.addEventListener('click', () => {
+        let val, punt, pal;
+        val = this.card.getAttribute('data-val');
+        punt = this.card.getAttribute('data-punt');
+        pal = this.card.getAttribute('data-pal');
+        console.log(val)
+        for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.length; x++) {
+          if (this._iniciPartidaHelper.jugador_1_tu[x].pal == pal && this._iniciPartidaHelper.jugador_1_tu[x].valor == val) {
+            let rem = this._iniciPartidaHelper.jugador_1_tu.indexOf(this._iniciPartidaHelper.jugador_1_tu[x])
+          }
         }
-      });
-    //  sortidaDeCartaGuanyadora(user, position)
+        if (pal == this._palo && punt > this._punt) {
+          this._valor = val;
+          this._punt = punt;
+          this._palo = pal
+        }
+        //Penalitzar moviment incorrecta
+        if (!this.flagMeWinner) {
+          if (pal != this._triomf && pal != this._paldejugada) {
+            for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.length; x++) {
+              if (this._iniciPartidaHelper.jugador_1_tu[x].pal == this._paldejugada || this._iniciPartidaHelper.jugador_1_tu[x].pal == this._triomf) {
+                this.penalitzacio = "penalitzacio"
+                this.teamOne -= 1;
+                this.teamTwo += 1;
+              }
+            }
+          }
+        }
+        if (this.flagMeWinner) {
+          this._paldejugada = pal;
+          this.seleccionatBasa = 'EL PAL DE SORTIDA ES ' + this._paldejugada;
+          this.basaSortidaGuanyador === '' ? this.basaSortidaGuanyador = "Jugador de sortida tu" : this.basaSortidaGuanyador = '', this.basaSortidaGuanyador = "Jugador de sortida tu";
+          this._valor = val;
+          this._punt = punt;
+          this._palo = pal
+          // showCard(this._iniciPartidaHelper.jugador_1_tu, 'tu', val, punt, pal, this.rem);
+          // this.remove();
+        } else {
+          // showCard(this._iniciPartidaHelper.jugador_1_tu, 'tu', val, punt, pal, this.rem);
+          // this.remove();
+        }
+      })
     }
   }
-
-  palSeleccionat(palseleccionat){
-    this.pal =  palseleccionat;
-    this.createTriomfSign(this.pal, 'tu')
-  }
-
-  createTriomfSign(pal, position){
-    this.seleccioInit = false;
-    this.pal_seleccionat = 'TRIOMF ESCOLLIT PER JUGADOR ' + position;
-    this.pal_posicio = 'EL TRIOMF ES: ' + pal;
-    this._triomf = this.pal;
- }
 }

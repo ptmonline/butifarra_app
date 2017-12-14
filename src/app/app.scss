@@ -14,3 +14,172 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+%img_render{
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+%font_master{
+  text-transform: uppercase;
+  font-family: Inconsolata;
+  font-size:12px;
+}
+
+$oros: rgba(255,250,133, 0.6);
+$bastos: rgba(167,212,77, 0.6);
+$espasses: rgba(90,150,167, 0.6);
+$copes: rgba(150,113,113, 0.6);
+
+$text_sadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+
+#tablero{
+  position: relative;
+  margin: 20px auto;
+  width: 800px;
+  height: 600px;
+}
+#tablero div{
+  display:block;
+}
+#user1{
+  position:relative;
+  margin:20px auto;
+  width:725px;
+}
+.carta{
+  width: 60px;
+  height:115px;
+  border-radius: 12px;
+  float:left;
+  margin-right: 10px;
+  opacity: 1;
+  font-family:Helvetica;
+  font-size:22px;
+  text-align: center;
+  position: relative;
+  z-index:9;
+  border:1px solid #bebebe;
+  margin-left: -22px;
+  color:#ffffff;
+  text-shadow: $text_sadow;
+  text-align:left;
+  padding: 10px 0 0 10px;
+
+}
+.__oros{
+  background-color: $oros;
+  background-image: url(../assets/imgs/oro.png);
+  @extend %img_render;
+}
+.__bastos{
+  background: $bastos;
+  background-image: url(../assets/imgs/bast.png);
+  @extend %img_render;
+}
+.__espasses{
+  background: $espasses;
+  background-image: url(../assets/imgs/esp.png);
+  @extend %img_render;
+}
+.__copes{
+  background: $copes;
+  background-image: url(../assets/imgs/cop.png);
+  @extend %img_render;
+}
+.jugada{
+  width:500px;
+  height:400px;
+  position:relative;
+  float:left;
+  margin:40px 0;
+  #esquerra{
+    position:absolute;
+    top: 150px;
+    left:20px;
+  }
+  #dreta{
+    position:absolute;
+    top: 150px;
+    right:100px;
+  }
+  #dalt{
+    position:absolute;
+    top: 0px;
+    right:257px;
+  }
+  #tu{
+    position:absolute;
+    bottom: -20px;
+    right:257px;
+  }
+  #seleccio-init{
+    position: absolute;
+    top:150px;
+    right:215px;
+  }
+}
+
+.seleccio{
+  height:300px;
+  position:relative;
+  float:left;
+  width:79px;
+  cursor: pointer;
+  text-align: center;
+  @extend %font_master;
+  .pals_triomf{
+    @extend %font_master;
+    margin-top:20px;
+  }
+}
+.pals{
+  width:50px;
+  height:50px;
+  float:left;
+  border:1px solid black;
+  margin:10px;
+  border-radius: 50px;
+}
+.butifarra{
+  background-color: black;
+  color:#ffffff;
+}
+
+.texte-seleccio{
+  position:relative;
+  float:left;
+  width:220px;
+  .pal-seleccionat{
+    @extend %font_master;
+    position:relative;
+    margin:10px 0;
+    display:block;
+  }
+  h3{
+    @extend %font_master;
+    margin:0 0 5px;
+  }
+  #seleccionat{
+    border-top:1px solid black;
+    padding-top:10px;
+  }
+  #penalitzacio{
+    color:red;
+  }
+  #novaPartida{
+    margin:30px 0 5px;
+    display:none; 
+    font-size: 15px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
+footer{
+  border-top:1px solid black;
+  padding-top:10px;
+  position: absolute;
+  bottom:-40px;
+  left:10px;
+  font-family: Inconsolata;
+  font-size:12px;
+}
