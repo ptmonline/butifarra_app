@@ -49,6 +49,7 @@ export class CardHelper {
             return 0;
         })
     }
+    
 
     //Setting attributes helper
     setAttributes(el, attrs) {

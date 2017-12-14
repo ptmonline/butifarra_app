@@ -58,43 +58,57 @@ var HomePage = (function () {
     function HomePage(navCtrl, _cardHelper) {
         this.navCtrl = navCtrl;
         this._cardHelper = _cardHelper;
-        this.cards = this._cardHelper.pilot[0].pal;
         this.repartirCartaInitial();
     }
     HomePage.prototype.repartirCartaInitial = function () {
         var sortida = ['oros', 'espasses', 'copes', 'bastos'], cartaDeSortida = this._cardHelper.pilot.slice(Math.floor(Math.random() * 48))[0];
         this._cardHelper.shuffle(sortida);
-        this.user1Sortida = sortida[0];
-        this.user2Sortida = sortida[1];
-        this.user3Sortida = sortida[2];
-        this.user4Sortida = sortida[3];
+        this.jugador_1_tu = sortida[0];
+        this.jugador_2_esquerra = sortida[1];
+        this.jugador_3_dreta = sortida[2];
+        this.jugador_4_dalt = sortida[3];
         this._cardHelper.shuffle(this._cardHelper.pilot);
         cartaDeSortida = cartaDeSortida.pal;
         console.log('cartaDeSortida: ', cartaDeSortida);
-        if (cartaDeSortida === this.user1Sortida)
-            this.initGame(1);
-        if (cartaDeSortida === this.user2Sortida)
-            this.initGame(2);
-        if (cartaDeSortida === this.user3Sortida)
-            this.initGame(3);
-        if (cartaDeSortida === this.user4Sortida)
-            this.initGame(4);
+        this.sortidaInitial(cartaDeSortida);
+    };
+    HomePage.prototype.sortidaInitial = function (pal) {
+        switch (pal) {
+            case this.jugador_1_tu: {
+                this.initGame(1);
+                break;
+            }
+            case this.jugador_2_esquerra: {
+                this.initGame(2);
+                break;
+            }
+            case this.jugador_3_dreta: {
+                this.initGame(3);
+                break;
+            }
+            case this.jugador_4_dalt: {
+                this.initGame(4);
+                break;
+            }
+        }
     };
     HomePage.prototype.initGame = function (numb) {
+        this.jugadorSortida = 'jugador numero ' + numb;
+        console.log('NUMERO: ', numb);
         this._cardHelper.shuffle(this._cardHelper.pilot);
         //Distribueix cartes
-        this.user1 = this._cardHelper.pilot.slice(0, 12);
-        this._cardHelper.ordenarCartesPerValor(this.user1);
-        this.user2 = this._cardHelper.pilot.slice(12, 24);
-        this._cardHelper.ordenarCartesPerValor(this.user2);
-        this.user3 = this._cardHelper.pilot.slice(24, 36);
-        this._cardHelper.ordenarCartesPerValor(this.user3);
-        this.user4 = this._cardHelper.pilot.slice(36, 48);
-        this._cardHelper.ordenarCartesPerValor(this.user4);
-        console.log('USER1: ', this.user1);
-        console.log('USER2: ', this.user2);
-        console.log('USER3: ', this.user3);
-        console.log('USER4: ', this.user4);
+        this.jugador_1_tu = this._cardHelper.pilot.slice(0, 12);
+        this._cardHelper.ordenarCartesPerValor(this.jugador_1_tu);
+        console.log('USER1 : ', this.jugador_1_tu);
+        this.jugador_2_esquerra = this._cardHelper.pilot.slice(12, 24);
+        this._cardHelper.ordenarCartesPerValor(this.jugador_2_esquerra);
+        console.log('USER2 : ', this.jugador_2_esquerra);
+        this.jugador_3_dreta = this._cardHelper.pilot.slice(24, 36);
+        this._cardHelper.ordenarCartesPerValor(this.jugador_3_dreta);
+        console.log('USER3 : ', this.jugador_3_dreta);
+        this.jugador_4_dalt = this._cardHelper.pilot.slice(36, 48);
+        this._cardHelper.ordenarCartesPerValor(this.jugador_4_dalt);
+        console.log('USER4 : ', this.jugador_4_dalt);
         // if (numb == 1) repartirAndEscollir(user1, 'tu')
         // if (numb == 2) repartirAndEscollir(user2, 'esquerra')
         // if (numb == 3) repartirAndEscollir(user3, 'dreta')
@@ -105,7 +119,7 @@ var HomePage = (function () {
     };
     HomePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-home',template:/*ion-inline-start:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/`<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Ionic Blank\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <p>\n\n    {{cards}}\n\n  </p>\n\n</ion-content>\n\n`/*ion-inline-end:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/,
+            selector: 'page-home',template:/*ion-inline-start:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/`<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Ionic Blank\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <p>\n\n    {{jugadorSortida}}\n\n  </p>\n\n</ion-content>\n\n`/*ion-inline-end:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/,
             providers: [__WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */]]
         }),
         __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */]) === "function" && _b || Object])
