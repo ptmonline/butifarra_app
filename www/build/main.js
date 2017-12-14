@@ -41,6 +41,7 @@ webpackEmptyAsyncContext.id = 150;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HomePage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__ = __webpack_require__(271);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -52,17 +53,65 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var HomePage = (function () {
-    function HomePage(navCtrl) {
+    function HomePage(navCtrl, _cardHelper) {
         this.navCtrl = navCtrl;
+        this._cardHelper = _cardHelper;
+        this.cards = this._cardHelper.pilot[0].pal;
+        this.repartirCartaInitial();
     }
+    HomePage.prototype.repartirCartaInitial = function () {
+        var sortida = ['oros', 'espasses', 'copes', 'bastos'], cartaDeSortida = this._cardHelper.pilot.slice(Math.floor(Math.random() * 48))[0];
+        this._cardHelper.shuffle(sortida);
+        this.user1Sortida = sortida[0];
+        this.user2Sortida = sortida[1];
+        this.user3Sortida = sortida[2];
+        this.user4Sortida = sortida[3];
+        this._cardHelper.shuffle(this._cardHelper.pilot);
+        cartaDeSortida = cartaDeSortida.pal;
+        console.log('cartaDeSortida: ', cartaDeSortida);
+        if (cartaDeSortida === this.user1Sortida)
+            this.initGame(1);
+        if (cartaDeSortida === this.user2Sortida)
+            this.initGame(2);
+        if (cartaDeSortida === this.user3Sortida)
+            this.initGame(3);
+        if (cartaDeSortida === this.user4Sortida)
+            this.initGame(4);
+    };
+    HomePage.prototype.initGame = function (numb) {
+        this._cardHelper.shuffle(this._cardHelper.pilot);
+        //Distribueix cartes
+        this.user1 = this._cardHelper.pilot.slice(0, 12);
+        this._cardHelper.ordenarCartesPerValor(this.user1);
+        this.user2 = this._cardHelper.pilot.slice(12, 24);
+        this._cardHelper.ordenarCartesPerValor(this.user2);
+        this.user3 = this._cardHelper.pilot.slice(24, 36);
+        this._cardHelper.ordenarCartesPerValor(this.user3);
+        this.user4 = this._cardHelper.pilot.slice(36, 48);
+        this._cardHelper.ordenarCartesPerValor(this.user4);
+        console.log('USER1: ', this.user1);
+        console.log('USER2: ', this.user2);
+        console.log('USER3: ', this.user3);
+        console.log('USER4: ', this.user4);
+        // if (numb == 1) repartirAndEscollir(user1, 'tu')
+        // if (numb == 2) repartirAndEscollir(user2, 'esquerra')
+        // if (numb == 3) repartirAndEscollir(user3, 'dreta')
+        // if (numb == 4) repartirAndEscollir(user4, 'dalt')
+        //  setTimeout(function(){
+        //    myCards();
+        //  },4000)
+    };
     HomePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-home',template:/*ion-inline-start:"/home/pau/Republica/butifarra_app/src/pages/home/home.html"*/`<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Ionic Blank\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  The world is your oyster.\n  <p>\n    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.\n  </p>\n</ion-content>\n`/*ion-inline-end:"/home/pau/Republica/butifarra_app/src/pages/home/home.html"*/
+            selector: 'page-home',template:/*ion-inline-start:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/`<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Ionic Blank\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <p>\n\n    {{cards}}\n\n  </p>\n\n</ion-content>\n\n`/*ion-inline-end:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/,
+            providers: [__WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */]]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */]) === "function" && _b || Object])
     ], HomePage);
     return HomePage;
+    var _a, _b;
 }());
 
 //# sourceMappingURL=home.js.map
@@ -177,7 +226,7 @@ var MyApp = (function () {
         });
     }
     MyApp = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"/home/pau/Republica/butifarra_app/src/app/app.html"*/`<ion-nav [root]="rootPage"></ion-nav>\n`/*ion-inline-end:"/home/pau/Republica/butifarra_app/src/app/app.html"*/
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"C:\Users\ce9\Documents\personal\butifarra_app\src\app\app.html"*/`<ion-nav [root]="rootPage"></ion-nav>\n\n`/*ion-inline-end:"C:\Users\ce9\Documents\personal\butifarra_app\src\app\app.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */]])
     ], MyApp);
@@ -185,6 +234,83 @@ var MyApp = (function () {
 }());
 
 //# sourceMappingURL=app.component.js.map
+
+/***/ }),
+
+/***/ 271:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CardHelper; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var CardHelper = (function () {
+    function CardHelper() {
+        //Baralla
+        this.pilot = [
+            { valor: 1, pal: 'oros', puntuacio: 4 }, { valor: 2, pal: 'oros', puntuacio: 0 }, { valor: 3, pal: 'oros', puntuacio: 0 },
+            { valor: 4, pal: 'oros', puntuacio: 0 }, { valor: 5, pal: 'oros', puntuacio: 0 }, { valor: 6, pal: 'oros', puntuacio: 0 },
+            { valor: 7, pal: 'oros', puntuacio: 0 }, { valor: 8, pal: 'oros', puntuacio: 0 }, { valor: 9, pal: 'oros', puntuacio: 5 },
+            { valor: 10, pal: 'oros', puntuacio: 1 }, { valor: 11, pal: 'oros', puntuacio: 2 }, { valor: 12, pal: 'oros', puntuacio: 3 },
+            { valor: 1, pal: 'copes', puntuacio: 4 }, { valor: 2, pal: 'copes', puntuacio: 0 }, { valor: 3, pal: 'copes', puntuacio: 0 },
+            { valor: 4, pal: 'copes', puntuacio: 0 }, { valor: 5, pal: 'copes', puntuacio: 0 }, { valor: 6, pal: 'copes', puntuacio: 0 },
+            { valor: 7, pal: 'copes', puntuacio: 0 }, { valor: 8, pal: 'copes', puntuacio: 0 }, { valor: 9, pal: 'copes', puntuacio: 5 },
+            { valor: 10, pal: 'copes', puntuacio: 1 }, { valor: 11, pal: 'copes', puntuacio: 2 }, { valor: 12, pal: 'copes', puntuacio: 3 },
+            { valor: 1, pal: 'bastos', puntuacio: 4 }, { valor: 2, pal: 'bastos', puntuacio: 0 }, { valor: 3, pal: 'bastos', puntuacio: 0 },
+            { valor: 4, pal: 'bastos', puntuacio: 0 }, { valor: 5, pal: 'bastos', puntuacio: 0 }, { valor: 6, pal: 'bastos', puntuacio: 0 },
+            { valor: 7, pal: 'bastos', puntuacio: 0 }, { valor: 8, pal: 'bastos', puntuacio: 0 }, { valor: 9, pal: 'bastos', puntuacio: 5 },
+            { valor: 10, pal: 'bastos', puntuacio: 1 }, { valor: 11, pal: 'bastos', puntuacio: 2 }, { valor: 12, pal: 'bastos', puntuacio: 3 },
+            { valor: 1, pal: 'espasses', puntuacio: 4 }, { valor: 2, pal: 'espasses', puntuacio: 0 }, { valor: 3, pal: 'espasses', puntuacio: 0 },
+            { valor: 4, pal: 'espasses', puntuacio: 0 }, { valor: 5, pal: 'espasses', puntuacio: 0 }, { valor: 6, pal: 'espasses', puntuacio: 0 },
+            { valor: 7, pal: 'espasses', puntuacio: 0 }, { valor: 8, pal: 'espasses', puntuacio: 0 }, { valor: 9, pal: 'espasses', puntuacio: 5 },
+            { valor: 10, pal: 'espasses', puntuacio: 1 }, { valor: 11, pal: 'espasses', puntuacio: 2 }, { valor: 12, pal: 'espasses', puntuacio: 3 },
+        ];
+    }
+    //Barreixa cartes
+    CardHelper.prototype.shuffle = function (array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+        while (0 !== currentIndex) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+        return array;
+    };
+    //Ordenar cartes per pal
+    CardHelper.prototype.ordenarCartesPerValor = function (user) {
+        user.sort(function (a, b) {
+            if (a.pal < b.pal)
+                return -1;
+            if (a.pal > b.pal)
+                return 1;
+            return 0;
+        });
+    };
+    //Setting attributes helper
+    CardHelper.prototype.setAttributes = function (el, attrs) {
+        for (var key in attrs) {
+            el.setAttribute(key, attrs[key]);
+        }
+    };
+    CardHelper = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
+        __metadata("design:paramtypes", [])
+    ], CardHelper);
+    return CardHelper;
+}());
+
+//# sourceMappingURL=card.helper.js.map
 
 /***/ })
 
