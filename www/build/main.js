@@ -307,10 +307,9 @@ var HomePage = (function () {
             selector: 'page-home',template:/*ion-inline-start:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/`<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Ionic Blank\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <p>\n\n    {{_iniciPartidaHelper.jugadorSortida}}\n\n  </p>\n\n  <aside class="texte-seleccio">\n\n    <h3>L A &nbsp;&nbsp;B U T I F A R R A</h3>\n\n    <div id="seleccionat" class="pal-seleccionat">{{_iniciPartidaHelper.pal_seleccionat}}</div>\n\n    <div id="seleccionatPosition" class="pal-seleccionat">{{_iniciPartidaHelper.pal_posicio}}</div>\n\n    <div id="seleccionatBasa" class="pal-seleccionat">{{seleccionatBasa}}</div>\n\n    <div id="basaSortidaGuanyador" class="pal-seleccionat">{{basaSortidaGuanyador}}</div>\n\n    <div id="puntuacioTeamA" class="pal-seleccionat">&nbsp;</div>\n\n    <div id="puntuacioTeamB" class="pal-seleccionat">&nbsp;</div>\n\n    <div id="penalitzacio" class="pal-seleccionat">{{penalitzacio}}</div>\n\n    <div id="novaPartida" class="pal-seleccionat">clickar per a nova partida</div>\n\n  </aside>\n\n  <section class="jugada">\n\n    <div id="esquerra" class="tapetejugada carta"></div>\n\n    <div id="dreta" class="tapetejugada carta"></div>\n\n    <div id="dalt" class="tapetejugada carta"></div>\n\n    <div id="tu" class="tapetejugada carta"></div>\n\n  </section>\n\n  <section class="seleccio" *ngIf="_iniciPartidaHelper.seleccioInit">\n\n    <h3>Selecciona Triomf</h3>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'oros\')">OROS</div>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'copes\')">COPES</div>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'espasses\')">ESPASSES</div>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'bastos\')">BASTOS</div>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'butifarra\')">BUTIFARRA</div>\n\n  </section>\n\n  <section id="user1"></section>\n\n\n\n</ion-content>`/*ion-inline-end:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/,
             providers: [__WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */], __WEBPACK_IMPORTED_MODULE_3__helpers_inicipartida_helper__["a" /* IniciPartidaHelper */]]
         }),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__helpers_inicipartida_helper__["a" /* IniciPartidaHelper */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__helpers_inicipartida_helper__["a" /* IniciPartidaHelper */]) === "function" && _c || Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */], __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */], __WEBPACK_IMPORTED_MODULE_3__helpers_inicipartida_helper__["a" /* IniciPartidaHelper */]])
     ], HomePage);
     return HomePage;
-    var _a, _b, _c;
 }());
 
 //# sourceMappingURL=home.js.map
@@ -626,9 +625,10 @@ var IniciPartidaHelper = (function () {
     };
     IniciPartidaHelper = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__card_helper__["a" /* CardHelper */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__card_helper__["a" /* CardHelper */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__card_helper__["a" /* CardHelper */]) === "function" && _a || Object])
     ], IniciPartidaHelper);
     return IniciPartidaHelper;
+    var _a;
 }());
 
 //# sourceMappingURL=inicipartida.helper.js.map
