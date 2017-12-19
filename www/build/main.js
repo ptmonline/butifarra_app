@@ -625,10 +625,9 @@ var IniciPartidaHelper = (function () {
     };
     IniciPartidaHelper = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__card_helper__["a" /* CardHelper */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__card_helper__["a" /* CardHelper */]) === "function" && _a || Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__card_helper__["a" /* CardHelper */]])
     ], IniciPartidaHelper);
     return IniciPartidaHelper;
-    var _a;
 }());
 
 //# sourceMappingURL=inicipartida.helper.js.map
