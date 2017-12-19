@@ -1,6 +1,16 @@
 import { Injectable } from "@angular/core";
 
+interface PilotConfig {
+    valor:number;
+    pal: string;
+    puntuacio: number;   
+}
 
+interface UserConfig {
+    cards: Array<PilotConfig>;
+    position: string;
+    sortida: string;
+}
 @Injectable()
 export class CardHelper {
 
@@ -27,7 +37,7 @@ export class CardHelper {
     constructor() { }
 
     //Barreixa cartes
-    shuffle(array) {
+    shuffle(array: string[]) {
         let currentIndex = array.length,
             temporaryValue,
             randomIndex;
@@ -42,8 +52,9 @@ export class CardHelper {
     }
 
     //Ordenar cartes per pal
-    ordenarCartesPerValor(user) {
-        user.sort((a, b) => {
+    ordenarCartesPerValor(user:UserConfig) {
+        console.log(typeof user);
+        user.cards.sort((a, b) => {
             if (a.pal < b.pal) return -1;
             if (a.pal > b.pal) return 1;
             return 0;
@@ -60,7 +71,6 @@ export class CardHelper {
 
     //Netejar cartes de la taula
        cleanTapete(){
-           console.log('calling this');
          let cleaner, palsId = ['dreta', 'esquerra', 'dalt', 'tu'];
          for (let t = 0; t < palsId.length; t++){
            cleaner = document.getElementById(palsId[t]);

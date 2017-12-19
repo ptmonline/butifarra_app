@@ -1,15 +1,26 @@
 import { Injectable } from "@angular/core";
 import { CardHelper } from "./card.helper";
 
+interface PilotConfig {
+    valor:number;
+    pal: string;
+    puntuacio: number;   
+}
+
+interface UserConfig {
+    cards: Array<PilotConfig>;
+    position: string;
+    sortida: string;
+}
 
 @Injectable()
 export class IniciPartidaHelper {
 
     public jugadorSortida: string;
-    public jugador_1_tu: any;
-    public jugador_2_esquerra: any;
-    public jugador_3_dreta: any;
-    public jugador_4_dalt: any;
+    public jugador_1_tu: UserConfig = <UserConfig>{};
+    public jugador_2_esquerra: UserConfig = <UserConfig>{};
+    public jugador_3_dreta: UserConfig = <UserConfig>{};
+    public jugador_4_dalt: UserConfig = <UserConfig>{};
 
     public jugadorDeInici: string;
     public triomfPals: any;
@@ -19,79 +30,81 @@ export class IniciPartidaHelper {
     public pal_seleccionat: string;
     public pal_posicio: string;
 
-    constructor(private _cardHelper: CardHelper) { }
+    constructor(private _cardHelper: CardHelper) {
+
+     }
 
     repartirCartaInitial() {
-        let sortida = ['oros', 'espasses', 'copes', 'bastos'],
-            cartaDeSortida = this._cardHelper.pilot.slice(Math.floor(Math.random() * 48))[0];
+        let sortida: string[] = ['oros', 'espasses', 'copes', 'bastos'],
+            cartaDeSortida: PilotConfig = this._cardHelper.pilot.slice(Math.floor(Math.random() * 48))[0];
 
         this._cardHelper.shuffle(sortida);
 
-        this.jugador_1_tu = sortida[0];
-        this.jugador_2_esquerra = sortida[1];
-        this.jugador_3_dreta = sortida[2];
-        this.jugador_4_dalt = sortida[3];
-
+        this.jugador_1_tu.sortida = sortida[0];
+        this.jugador_2_esquerra.sortida = sortida[1];
+        this.jugador_3_dreta.sortida = sortida[2];
+        this.jugador_4_dalt.sortida = sortida[3];
 
         this._cardHelper.shuffle(this._cardHelper.pilot);
 
-        cartaDeSortida = cartaDeSortida.pal;
-        console.log('cartaDeSortida: ', cartaDeSortida);
+        cartaDeSortida.pal = cartaDeSortida.pal;
+        console.log('cartaDeSortida: ', cartaDeSortida.pal);
 
-        this.sortidaInitial(cartaDeSortida);
+        this.sortidaInitial(cartaDeSortida.pal);
 
     }
 
-    sortidaInitial(pal) {
+    sortidaInitial(pal: string) {
         switch (pal) {
-            case this.jugador_1_tu: {
+            case this.jugador_1_tu.sortida: {
                 this.initGame(1);
                 break;
             }
-            case this.jugador_2_esquerra: {
+            case this.jugador_2_esquerra.sortida: {
                 this.initGame(2);
                 break;
             }
-            case this.jugador_3_dreta: {
+            case this.jugador_3_dreta.sortida: {
                 this.initGame(3);
                 break;
             }
-            case this.jugador_4_dalt: {
+            case this.jugador_4_dalt.sortida: {
                 this.initGame(4);
                 break;
             }
         }
     }
 
-    initGame(numb) {
+    initGame(numb: number) {
 
         this.jugadorSortida = 'jugador numero ' + numb;
         this._cardHelper.shuffle(this._cardHelper.pilot)
         //Distribueix cartes
-        this.jugador_1_tu = this._cardHelper.pilot.slice(0, 12);
+        this.jugador_1_tu.cards = this._cardHelper.pilot.slice(0, 12);
         this._cardHelper.ordenarCartesPerValor(this.jugador_1_tu);
-        this.jugador_2_esquerra = this._cardHelper.pilot.slice(12, 24);
+        this.jugador_2_esquerra.cards = this._cardHelper.pilot.slice(12, 24);
         this._cardHelper.ordenarCartesPerValor(this.jugador_2_esquerra);
-        this.jugador_3_dreta = this._cardHelper.pilot.slice(24, 36);
+        this.jugador_3_dreta.cards = this._cardHelper.pilot.slice(24, 36);
         this._cardHelper.ordenarCartesPerValor(this.jugador_3_dreta);
-        this.jugador_4_dalt = this._cardHelper.pilot.slice(36, 48);
+        this.jugador_4_dalt.cards = this._cardHelper.pilot.slice(36, 48);
         this._cardHelper.ordenarCartesPerValor(this.jugador_4_dalt);
 
-        if (numb == 1) this.repartirAndEscollir(this.jugador_1_tu, 'tu')
-        if (numb == 2) this.repartirAndEscollir(this.jugador_2_esquerra, 'esquerra')
-        if (numb == 3) this.repartirAndEscollir(this.jugador_3_dreta, 'dreta')
-        if (numb == 4) this.repartirAndEscollir(this.jugador_4_dalt, 'dalt')
+        if (numb == 1) this.repartirAndEscollir(this.jugador_1_tu);
+        if (numb == 2) this.repartirAndEscollir(this.jugador_2_esquerra);
+        if (numb == 3) this.repartirAndEscollir(this.jugador_3_dreta);
+        if (numb == 4) this.repartirAndEscollir(this.jugador_4_dalt);
 
     }
 
-    repartirAndEscollir(user, position) {
-        user == this.jugador_4_dalt ? this.jugadorDeInici = 'company' : this.jugadorDeInici = 'contrari'
-        if (user != this.jugador_1_tu) {
+    repartirAndEscollir(user: UserConfig) {
+        console.log('USER: ', user);
+        user.cards == this.jugador_4_dalt.cards ? this.jugadorDeInici = 'company' : this.jugadorDeInici = 'contrari'
+        if (user.cards != this.jugador_1_tu.cards) {
             let counts = {};
-            user.forEach((x) => {
+            user.cards.forEach((x) => {
                 counts[x.pal] = (counts[x.pal] || 0) + 1;
                 if (counts[x.pal] >= 4) {
-                    this.createTriomfSign(x.pal, position)
+                    this.createTriomfSign(x.pal, user.position)
                 }
             });
             //  sortidaDeCartaGuanyadora(user, position)
@@ -103,7 +116,7 @@ export class IniciPartidaHelper {
         this.createTriomfSign(this.pal, 'tu')
     }
 
-    createTriomfSign(pal, position) {
+    createTriomfSign(pal: string, position: string) {
         this.seleccioInit = false;
         this.pal_seleccionat = 'TRIOMF ESCOLLIT PER JUGADOR ' + position;
         this.pal_posicio = 'EL TRIOMF ES: ' + pal;

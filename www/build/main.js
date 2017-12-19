@@ -56,7 +56,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-// import _ from 'lodash';
 var HomePage = (function () {
     function HomePage(navCtrl, _cardHelper, _iniciPartidaHelper) {
         var _this = this;
@@ -73,21 +72,23 @@ var HomePage = (function () {
         this.winner = {};
         this.puntuacioTeamA = document.getElementById("puntuacioTeamA");
         this.puntuacioTeamB = document.getElementById("puntuacioTeamB");
-        this._iniciPartidaHelper.repartirCartaInitial();
+        setTimeout(function () {
+            _this._iniciPartidaHelper.repartirCartaInitial();
+        }, 2000);
         setTimeout(function () {
             _this.myCards();
         }, 4000);
     }
     HomePage.prototype.myCards = function () {
         var _this = this;
-        for (var x = 0; x < this._iniciPartidaHelper.jugador_1_tu.length; x++) {
+        for (var x = 0; x < this._iniciPartidaHelper.jugador_1_tu.cards.length; x++) {
             this.card = document.createElement('div');
-            this.card.innerHTML = this._iniciPartidaHelper.jugador_1_tu[x].valor;
+            this.card.innerHTML = this._iniciPartidaHelper.jugador_1_tu.cards[x].valor;
             this._cardHelper.setAttributes(this.card, {
-                'data-pal': this._iniciPartidaHelper.jugador_1_tu[x].pal,
-                'data-val': this._iniciPartidaHelper.jugador_1_tu[x].valor,
-                'data-punt': this._iniciPartidaHelper.jugador_1_tu[x].puntuacio,
-                'class': 'tapetejugada carta __' + this._iniciPartidaHelper.jugador_1_tu[x].pal
+                'data-pal': this._iniciPartidaHelper.jugador_1_tu.cards[x].pal,
+                'data-val': this._iniciPartidaHelper.jugador_1_tu.cards[x].valor,
+                'data-punt': this._iniciPartidaHelper.jugador_1_tu.cards[x].puntuacio,
+                'class': 'tapetejugada carta __' + this._iniciPartidaHelper.jugador_1_tu.cards[x].pal
             });
             this.tapete = document.getElementById('user1');
             this.tapete.appendChild(this.card);
@@ -97,9 +98,9 @@ var HomePage = (function () {
                 punt = evt.target.getAttribute('data-punt');
                 pal = evt.target.getAttribute('data-pal');
                 console.log(val);
-                for (var x_1 = 0; x_1 < _this._iniciPartidaHelper.jugador_1_tu.length; x_1++) {
-                    if (_this._iniciPartidaHelper.jugador_1_tu[x_1].pal == pal && _this._iniciPartidaHelper.jugador_1_tu[x_1].valor == val) {
-                        _this.rem = _this._iniciPartidaHelper.jugador_1_tu.indexOf(_this._iniciPartidaHelper.jugador_1_tu[x_1]);
+                for (var x_1 = 0; x_1 < _this._iniciPartidaHelper.jugador_1_tu.cards.length; x_1++) {
+                    if (_this._iniciPartidaHelper.jugador_1_tu.cards[x_1].pal == pal && _this._iniciPartidaHelper.jugador_1_tu.cards[x_1].valor == val) {
+                        _this.rem = _this._iniciPartidaHelper.jugador_1_tu.cards.indexOf(_this._iniciPartidaHelper.jugador_1_tu.cards[x_1]);
                     }
                 }
                 if (pal == _this._palo && punt > _this._punt) {
@@ -110,8 +111,8 @@ var HomePage = (function () {
                 //Penalitzar moviment incorrecta
                 if (!_this.flagMeWinner) {
                     if (pal != _this._triomf && pal != _this._paldejugada) {
-                        for (var x_2 = 0; x_2 < _this._iniciPartidaHelper.jugador_1_tu.length; x_2++) {
-                            if (_this._iniciPartidaHelper.jugador_1_tu[x_2].pal == _this._paldejugada || _this._iniciPartidaHelper.jugador_1_tu[x_2].pal == _this._triomf) {
+                        for (var x_2 = 0; x_2 < _this._iniciPartidaHelper.jugador_1_tu.cards.length; x_2++) {
+                            if (_this._iniciPartidaHelper.jugador_1_tu.cards[x_2].pal == _this._paldejugada || _this._iniciPartidaHelper.jugador_1_tu.cards[x_2].pal == _this._triomf) {
                                 _this.penalitzacio = "penalitzacio";
                                 _this.teamOne -= 1;
                                 _this.teamTwo += 1;
@@ -126,11 +127,11 @@ var HomePage = (function () {
                     _this._valor = val;
                     _this._punt = punt;
                     _this._palo = pal;
-                    _this.showCard(_this._iniciPartidaHelper.jugador_1_tu, 'tu', val, punt, pal, _this.rem);
+                    _this.showCard(_this._iniciPartidaHelper.jugador_1_tu.cards, 'tu', val, punt, pal, _this.rem);
                     // this.remove();
                 }
                 else {
-                    _this.showCard(_this._iniciPartidaHelper.jugador_1_tu, 'tu', val, punt, pal, _this.rem);
+                    _this.showCard(_this._iniciPartidaHelper.jugador_1_tu.cards, 'tu', val, punt, pal, _this.rem);
                     // this.remove();
                 }
             });
@@ -154,13 +155,13 @@ var HomePage = (function () {
         if (count < 4) {
             switch (position) {
                 case 'tu':
-                    this.nextHand(this._iniciPartidaHelper.jugador_3_dreta, 'dreta', value, punt, pal);
+                    this.nextHand(this._iniciPartidaHelper.jugador_3_dreta.cards, 'dreta', value, punt, pal);
                     break;
                 case 'dreta':
-                    this.nextHand(this._iniciPartidaHelper.jugador_4_dalt, 'dalt', value, punt, pal);
+                    this.nextHand(this._iniciPartidaHelper.jugador_4_dalt.cards, 'dalt', value, punt, pal);
                     break;
                 case 'dalt':
-                    this.nextHand(this._iniciPartidaHelper.jugador_2_esquerra, 'esquerra', value, punt, pal);
+                    this.nextHand(this._iniciPartidaHelper.jugador_2_esquerra.cards, 'esquerra', value, punt, pal);
                     break;
             }
         }
@@ -170,6 +171,7 @@ var HomePage = (function () {
     };
     HomePage.prototype.nextHand = function (user, position, value, punt, pal) {
         var _this = this;
+        console.log('USERNEXTHAND: ', user);
         setTimeout(function () {
             _this.startPlay(user, position, value, punt, pal);
         }, 2000);
@@ -237,17 +239,17 @@ var HomePage = (function () {
             this.teamOne += 1;
         }
         else if (this.winner.dreta > this.winner.tu && this.winner.dreta > this.winner.esquerra && this.winner.dreta > this.winner.dalt) {
-            this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_3_dreta, "dreta");
+            this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_3_dreta);
             this.teamTwo += this.premi;
             this.teamTwo += 1;
         }
         else if (this.winner.esquerra > this.winner.tu && this.winner.esquerra > this.winner.dreta && this.winner.esquerra > this.winner.dalt) {
-            this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_2_esquerra, "esquerra");
+            this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_2_esquerra);
             this.teamTwo += this.premi;
             this.teamTwo += 1;
         }
         else {
-            this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_4_dalt, "dalt");
+            this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_4_dalt);
             this.teamOne += this.premi;
             this.teamOne += 1;
         }
@@ -259,20 +261,20 @@ var HomePage = (function () {
         this.puntuacioTeamA === '' ? this.puntuacioTeamA = "Puntuacio equip A " + this.teamOne : this.puntuacioTeamA = '', this.puntuacioTeamA = "Puntuacio equip A " + this.teamOne;
         this.puntuacioTeamB === '' ? this.puntuacioTeamB = "Puntuacio equip B " + this.teamTwo : this.puntuacioTeamB = '', this.puntuacioTeamB = "Puntuacio equip B " + this.teamTwo;
     };
-    HomePage.prototype.sortidaDeCartaGuanyadora = function (user, position) {
+    HomePage.prototype.sortidaDeCartaGuanyadora = function (user) {
         var _this = this;
         console.log('USERUSER: ', user);
         this.flagMeWinner = false;
-        if (user.length != 0) {
+        if (user.cards.length != 0) {
             setTimeout(function () {
-                var firstcard = user[Math.floor(Math.random() * user.length)];
+                var firstcard = user[Math.floor(Math.random() * user.cards.length)];
                 _this._valor = firstcard.valor;
                 _this._punt = firstcard.puntuacio;
                 _this._palo = firstcard.pal;
                 _this._paldejugada = firstcard.pal;
                 _this.seleccionatBasa = 'EL PAL DE SORTIDA ES ' + _this._paldejugada;
-                _this.showCard(user, position, firstcard.valor, firstcard.puntuacio, firstcard.pal, user.indexOf(firstcard));
-                _this.basaSortidaGuanyador === '' ? _this.basaSortidaGuanyador = "Jugador de sortida " + position : _this.basaSortidaGuanyador = '', _this.basaSortidaGuanyador = "Jugador de sortida " + position;
+                _this.showCard(user.cards, user.position, firstcard.valor, firstcard.puntuacio, firstcard.pal, user.cards.indexOf(firstcard));
+                _this.basaSortidaGuanyador === '' ? _this.basaSortidaGuanyador = "Jugador de sortida " + user.position : _this.basaSortidaGuanyador = '', _this.basaSortidaGuanyador = "Jugador de sortida " + user.position;
             }, 4000);
         }
         else {
@@ -307,9 +309,10 @@ var HomePage = (function () {
             selector: 'page-home',template:/*ion-inline-start:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/`<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Ionic Blank\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <p>\n\n    {{_iniciPartidaHelper.jugadorSortida}}\n\n  </p>\n\n  <aside class="texte-seleccio">\n\n    <h3>L A &nbsp;&nbsp;B U T I F A R R A</h3>\n\n    <div id="seleccionat" class="pal-seleccionat">{{_iniciPartidaHelper.pal_seleccionat}}</div>\n\n    <div id="seleccionatPosition" class="pal-seleccionat">{{_iniciPartidaHelper.pal_posicio}}</div>\n\n    <div id="seleccionatBasa" class="pal-seleccionat">{{seleccionatBasa}}</div>\n\n    <div id="basaSortidaGuanyador" class="pal-seleccionat">{{basaSortidaGuanyador}}</div>\n\n    <div id="puntuacioTeamA" class="pal-seleccionat">&nbsp;</div>\n\n    <div id="puntuacioTeamB" class="pal-seleccionat">&nbsp;</div>\n\n    <div id="penalitzacio" class="pal-seleccionat">{{penalitzacio}}</div>\n\n    <div id="novaPartida" class="pal-seleccionat">clickar per a nova partida</div>\n\n  </aside>\n\n  <section class="jugada">\n\n    <div id="esquerra" class="tapetejugada carta"></div>\n\n    <div id="dreta" class="tapetejugada carta"></div>\n\n    <div id="dalt" class="tapetejugada carta"></div>\n\n    <div id="tu" class="tapetejugada carta"></div>\n\n  </section>\n\n  <section class="seleccio" *ngIf="_iniciPartidaHelper.seleccioInit">\n\n    <h3>Selecciona Triomf</h3>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'oros\')">OROS</div>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'copes\')">COPES</div>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'espasses\')">ESPASSES</div>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'bastos\')">BASTOS</div>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'butifarra\')">BUTIFARRA</div>\n\n  </section>\n\n  <section id="user1"></section>\n\n\n\n</ion-content>`/*ion-inline-end:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/,
             providers: [__WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */], __WEBPACK_IMPORTED_MODULE_3__helpers_inicipartida_helper__["a" /* IniciPartidaHelper */]]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */], __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */], __WEBPACK_IMPORTED_MODULE_3__helpers_inicipartida_helper__["a" /* IniciPartidaHelper */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__helpers_inicipartida_helper__["a" /* IniciPartidaHelper */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__helpers_inicipartida_helper__["a" /* IniciPartidaHelper */]) === "function" && _c || Object])
     ], HomePage);
     return HomePage;
+    var _a, _b, _c;
 }());
 
 //# sourceMappingURL=home.js.map
@@ -368,7 +371,8 @@ var CardHelper = (function () {
     };
     //Ordenar cartes per pal
     CardHelper.prototype.ordenarCartesPerValor = function (user) {
-        user.sort(function (a, b) {
+        console.log(typeof user);
+        user.cards.sort(function (a, b) {
             if (a.pal < b.pal)
                 return -1;
             if (a.pal > b.pal)
@@ -384,7 +388,6 @@ var CardHelper = (function () {
     };
     //Netejar cartes de la taula
     CardHelper.prototype.cleanTapete = function () {
-        console.log('calling this');
         var cleaner, palsId = ['dreta', 'esquerra', 'dalt', 'tu'];
         for (var t = 0; t < palsId.length; t++) {
             cleaner = document.getElementById(palsId[t]);
@@ -544,35 +547,39 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var IniciPartidaHelper = (function () {
     function IniciPartidaHelper(_cardHelper) {
         this._cardHelper = _cardHelper;
+        this.jugador_1_tu = {};
+        this.jugador_2_esquerra = {};
+        this.jugador_3_dreta = {};
+        this.jugador_4_dalt = {};
         this.seleccioInit = true;
     }
     IniciPartidaHelper.prototype.repartirCartaInitial = function () {
         var sortida = ['oros', 'espasses', 'copes', 'bastos'], cartaDeSortida = this._cardHelper.pilot.slice(Math.floor(Math.random() * 48))[0];
         this._cardHelper.shuffle(sortida);
-        this.jugador_1_tu = sortida[0];
-        this.jugador_2_esquerra = sortida[1];
-        this.jugador_3_dreta = sortida[2];
-        this.jugador_4_dalt = sortida[3];
+        this.jugador_1_tu.sortida = sortida[0];
+        this.jugador_2_esquerra.sortida = sortida[1];
+        this.jugador_3_dreta.sortida = sortida[2];
+        this.jugador_4_dalt.sortida = sortida[3];
         this._cardHelper.shuffle(this._cardHelper.pilot);
-        cartaDeSortida = cartaDeSortida.pal;
-        console.log('cartaDeSortida: ', cartaDeSortida);
-        this.sortidaInitial(cartaDeSortida);
+        cartaDeSortida.pal = cartaDeSortida.pal;
+        console.log('cartaDeSortida: ', cartaDeSortida.pal);
+        this.sortidaInitial(cartaDeSortida.pal);
     };
     IniciPartidaHelper.prototype.sortidaInitial = function (pal) {
         switch (pal) {
-            case this.jugador_1_tu: {
+            case this.jugador_1_tu.sortida: {
                 this.initGame(1);
                 break;
             }
-            case this.jugador_2_esquerra: {
+            case this.jugador_2_esquerra.sortida: {
                 this.initGame(2);
                 break;
             }
-            case this.jugador_3_dreta: {
+            case this.jugador_3_dreta.sortida: {
                 this.initGame(3);
                 break;
             }
-            case this.jugador_4_dalt: {
+            case this.jugador_4_dalt.sortida: {
                 this.initGame(4);
                 break;
             }
@@ -582,32 +589,33 @@ var IniciPartidaHelper = (function () {
         this.jugadorSortida = 'jugador numero ' + numb;
         this._cardHelper.shuffle(this._cardHelper.pilot);
         //Distribueix cartes
-        this.jugador_1_tu = this._cardHelper.pilot.slice(0, 12);
+        this.jugador_1_tu.cards = this._cardHelper.pilot.slice(0, 12);
         this._cardHelper.ordenarCartesPerValor(this.jugador_1_tu);
-        this.jugador_2_esquerra = this._cardHelper.pilot.slice(12, 24);
+        this.jugador_2_esquerra.cards = this._cardHelper.pilot.slice(12, 24);
         this._cardHelper.ordenarCartesPerValor(this.jugador_2_esquerra);
-        this.jugador_3_dreta = this._cardHelper.pilot.slice(24, 36);
+        this.jugador_3_dreta.cards = this._cardHelper.pilot.slice(24, 36);
         this._cardHelper.ordenarCartesPerValor(this.jugador_3_dreta);
-        this.jugador_4_dalt = this._cardHelper.pilot.slice(36, 48);
+        this.jugador_4_dalt.cards = this._cardHelper.pilot.slice(36, 48);
         this._cardHelper.ordenarCartesPerValor(this.jugador_4_dalt);
         if (numb == 1)
-            this.repartirAndEscollir(this.jugador_1_tu, 'tu');
+            this.repartirAndEscollir(this.jugador_1_tu);
         if (numb == 2)
-            this.repartirAndEscollir(this.jugador_2_esquerra, 'esquerra');
+            this.repartirAndEscollir(this.jugador_2_esquerra);
         if (numb == 3)
-            this.repartirAndEscollir(this.jugador_3_dreta, 'dreta');
+            this.repartirAndEscollir(this.jugador_3_dreta);
         if (numb == 4)
-            this.repartirAndEscollir(this.jugador_4_dalt, 'dalt');
+            this.repartirAndEscollir(this.jugador_4_dalt);
     };
-    IniciPartidaHelper.prototype.repartirAndEscollir = function (user, position) {
+    IniciPartidaHelper.prototype.repartirAndEscollir = function (user) {
         var _this = this;
-        user == this.jugador_4_dalt ? this.jugadorDeInici = 'company' : this.jugadorDeInici = 'contrari';
-        if (user != this.jugador_1_tu) {
+        console.log('USER: ', user);
+        user.cards == this.jugador_4_dalt.cards ? this.jugadorDeInici = 'company' : this.jugadorDeInici = 'contrari';
+        if (user.cards != this.jugador_1_tu.cards) {
             var counts_1 = {};
-            user.forEach(function (x) {
+            user.cards.forEach(function (x) {
                 counts_1[x.pal] = (counts_1[x.pal] || 0) + 1;
                 if (counts_1[x.pal] >= 4) {
-                    _this.createTriomfSign(x.pal, position);
+                    _this.createTriomfSign(x.pal, user.position);
                 }
             });
             //  sortidaDeCartaGuanyadora(user, position)
@@ -625,9 +633,10 @@ var IniciPartidaHelper = (function () {
     };
     IniciPartidaHelper = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__card_helper__["a" /* CardHelper */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__card_helper__["a" /* CardHelper */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__card_helper__["a" /* CardHelper */]) === "function" && _a || Object])
     ], IniciPartidaHelper);
     return IniciPartidaHelper;
+    var _a;
 }());
 
 //# sourceMappingURL=inicipartida.helper.js.map

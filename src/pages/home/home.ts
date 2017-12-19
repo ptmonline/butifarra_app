@@ -3,7 +3,17 @@ import { NavController } from 'ionic-angular';
 import { CardHelper } from '../helpers/card.helper';
 import { IniciPartidaHelper } from '../helpers/inicipartida.helper';
 // import _ from 'lodash';
+interface PilotConfig {
+  valor:number;
+  pal: string;
+  puntuacio: number;   
+}
 
+interface UserConfig {
+  cards: Array<PilotConfig>;
+  position: string;
+  sortida: string;
+}
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
@@ -33,22 +43,24 @@ export class HomePage {
   public puntuacioTeamB: any = document.getElementById("puntuacioTeamB");
 
   constructor(public navCtrl: NavController, public _cardHelper: CardHelper, public _iniciPartidaHelper: IniciPartidaHelper) {
-    this._iniciPartidaHelper.repartirCartaInitial();
+    setTimeout(()=>{
+      this._iniciPartidaHelper.repartirCartaInitial();
+    }, 2000)
     setTimeout(() => {
       this.myCards();
     }, 4000)
   }
 
   myCards() {
-    for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.length; x++) {
+    for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.cards.length; x++) {
       this.card = document.createElement('div');
-      this.card.innerHTML = this._iniciPartidaHelper.jugador_1_tu[x].valor;
+      this.card.innerHTML = this._iniciPartidaHelper.jugador_1_tu.cards[x].valor;
 
       this._cardHelper.setAttributes(this.card, {
-        'data-pal': this._iniciPartidaHelper.jugador_1_tu[x].pal,
-        'data-val': this._iniciPartidaHelper.jugador_1_tu[x].valor,
-        'data-punt': this._iniciPartidaHelper.jugador_1_tu[x].puntuacio,
-        'class': 'tapetejugada carta __' + this._iniciPartidaHelper.jugador_1_tu[x].pal
+        'data-pal': this._iniciPartidaHelper.jugador_1_tu.cards[x].pal,
+        'data-val': this._iniciPartidaHelper.jugador_1_tu.cards[x].valor,
+        'data-punt': this._iniciPartidaHelper.jugador_1_tu.cards[x].puntuacio,
+        'class': 'tapetejugada carta __' + this._iniciPartidaHelper.jugador_1_tu.cards[x].pal
       })
 
       this.tapete = document.getElementById('user1');
@@ -60,9 +72,9 @@ export class HomePage {
         punt = evt.target.getAttribute('data-punt');
         pal = evt.target.getAttribute('data-pal');
         console.log(val)
-        for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.length; x++) {
-          if (this._iniciPartidaHelper.jugador_1_tu[x].pal == pal && this._iniciPartidaHelper.jugador_1_tu[x].valor == val) {
-            this.rem = this._iniciPartidaHelper.jugador_1_tu.indexOf(this._iniciPartidaHelper.jugador_1_tu[x])
+        for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.cards.length; x++) {
+          if (this._iniciPartidaHelper.jugador_1_tu.cards[x].pal == pal && this._iniciPartidaHelper.jugador_1_tu.cards[x].valor == val) {
+            this.rem = this._iniciPartidaHelper.jugador_1_tu.cards.indexOf(this._iniciPartidaHelper.jugador_1_tu.cards[x])
           }
         }
         if (pal == this._palo && punt > this._punt) {
@@ -73,8 +85,8 @@ export class HomePage {
         //Penalitzar moviment incorrecta
         if (!this.flagMeWinner) {
           if (pal != this._triomf && pal != this._paldejugada) {
-            for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.length; x++) {
-              if (this._iniciPartidaHelper.jugador_1_tu[x].pal == this._paldejugada || this._iniciPartidaHelper.jugador_1_tu[x].pal == this._triomf) {
+            for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.cards.length; x++) {
+              if (this._iniciPartidaHelper.jugador_1_tu.cards[x].pal == this._paldejugada || this._iniciPartidaHelper.jugador_1_tu.cards[x].pal == this._triomf) {
                 this.penalitzacio = "penalitzacio"
                 this.teamOne -= 1;
                 this.teamTwo += 1;
@@ -89,10 +101,10 @@ export class HomePage {
           this._valor = val;
           this._punt = punt;
           this._palo = pal
-          this.showCard(this._iniciPartidaHelper.jugador_1_tu, 'tu', val, punt, pal, this.rem);
+          this.showCard(this._iniciPartidaHelper.jugador_1_tu.cards, 'tu', val, punt, pal, this.rem);
           // this.remove();
         } else {
-          this.showCard(this._iniciPartidaHelper.jugador_1_tu, 'tu', val, punt, pal, this.rem);
+          this.showCard(this._iniciPartidaHelper.jugador_1_tu.cards, 'tu', val, punt, pal, this.rem);
           // this.remove();
         }
       })
@@ -118,13 +130,13 @@ export class HomePage {
     if (count < 4) {
       switch (position) {
         case 'tu':
-          this.nextHand(this._iniciPartidaHelper.jugador_3_dreta, 'dreta', value, punt, pal)
+          this.nextHand(this._iniciPartidaHelper.jugador_3_dreta.cards, 'dreta', value, punt, pal)
           break;
         case 'dreta':
-          this.nextHand(this._iniciPartidaHelper.jugador_4_dalt, 'dalt', value, punt, pal)
+          this.nextHand(this._iniciPartidaHelper.jugador_4_dalt.cards, 'dalt', value, punt, pal)
           break;
         case 'dalt':
-          this.nextHand(this._iniciPartidaHelper.jugador_2_esquerra, 'esquerra', value, punt, pal)
+          this.nextHand(this._iniciPartidaHelper.jugador_2_esquerra.cards, 'esquerra', value, punt, pal)
           break;
       }
     } else {
@@ -132,6 +144,7 @@ export class HomePage {
     }
   }
   nextHand(user, position, value, punt, pal) {
+    console.log('USERNEXTHAND: ', user)
     setTimeout(() => {
       this.startPlay(user, position, value, punt, pal)
     }, 2000);
@@ -194,15 +207,15 @@ export class HomePage {
       this.teamOne += this.premi;
       this.teamOne += 1;
     } else if (this.winner.dreta > this.winner.tu && this.winner.dreta > this.winner.esquerra && this.winner.dreta > this.winner.dalt) {
-      this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_3_dreta, "dreta")
+      this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_3_dreta)
       this.teamTwo += this.premi;
       this.teamTwo += 1;
     } else if (this.winner.esquerra > this.winner.tu && this.winner.esquerra > this.winner.dreta && this.winner.esquerra > this.winner.dalt) {
-      this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_2_esquerra, "esquerra")
+      this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_2_esquerra)
       this.teamTwo += this.premi;
       this.teamTwo += 1;
     } else {
-      this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_4_dalt, "dalt")
+      this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_4_dalt)
       this.teamOne += this.premi;
       this.teamOne += 1;
     }
@@ -214,19 +227,19 @@ export class HomePage {
     this.puntuacioTeamA === '' ? this.puntuacioTeamA = "Puntuacio equip A " + this.teamOne : this.puntuacioTeamA = '', this.puntuacioTeamA = "Puntuacio equip A " + this.teamOne;
     this.puntuacioTeamB === '' ? this.puntuacioTeamB = "Puntuacio equip B " + this.teamTwo : this.puntuacioTeamB = '', this.puntuacioTeamB = "Puntuacio equip B " + this.teamTwo;
   }
-  sortidaDeCartaGuanyadora(user, position) {
+  sortidaDeCartaGuanyadora(user: UserConfig) {
     console.log('USERUSER: ', user)
     this.flagMeWinner = false;
-    if (user.length != 0) {
+    if (user.cards.length != 0) {
       setTimeout(() => {
-        var firstcard = user[Math.floor(Math.random() * user.length)];
+        let firstcard:PilotConfig = user[Math.floor(Math.random() * user.cards.length)];
         this._valor = firstcard.valor;
         this._punt = firstcard.puntuacio;
         this._palo = firstcard.pal;
         this._paldejugada = firstcard.pal;
         this.seleccionatBasa = 'EL PAL DE SORTIDA ES ' + this._paldejugada;
-        this.showCard(user, position, firstcard.valor, firstcard.puntuacio, firstcard.pal, user.indexOf(firstcard))
-        this.basaSortidaGuanyador === '' ? this.basaSortidaGuanyador = "Jugador de sortida " + position : this.basaSortidaGuanyador = '', this.basaSortidaGuanyador = "Jugador de sortida " + position
+        this.showCard(user.cards, user.position, firstcard.valor, firstcard.puntuacio, firstcard.pal, user.cards.indexOf(firstcard))
+        this.basaSortidaGuanyador === '' ? this.basaSortidaGuanyador = "Jugador de sortida " + user.position : this.basaSortidaGuanyador = '', this.basaSortidaGuanyador = "Jugador de sortida " + user.position
       }, 4000)
     } else {
       if (this.teamOne >= 101 || this.teamTwo >= 101) {
