@@ -2,18 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { CardHelper } from '../helpers/card.helper';
 import { IniciPartidaHelper } from '../helpers/inicipartida.helper';
-// import _ from 'lodash';
-interface PilotConfig {
-  valor:number;
-  pal: string;
-  puntuacio: number;   
-}
 
-interface UserConfig {
-  cards: Array<PilotConfig>;
-  position: string;
-  sortida: string;
-}
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
@@ -43,9 +32,9 @@ export class HomePage {
   public puntuacioTeamB: any = document.getElementById("puntuacioTeamB");
 
   constructor(public navCtrl: NavController, public _cardHelper: CardHelper, public _iniciPartidaHelper: IniciPartidaHelper) {
-    setTimeout(()=>{
+
       this._iniciPartidaHelper.repartirCartaInitial();
-    }, 2000)
+    
     setTimeout(() => {
       this.myCards();
     }, 4000)
@@ -112,11 +101,13 @@ export class HomePage {
   }
 
   showCard(player, position, value, punt, pal, removedcard) {
+    console.log('PLAYER: ',player)
     player.splice(removedcard, 1);
     //Check and reset count
     this.count == 4 ? this.count = 1 : this.count += 1;
     this.winner[position] = parseInt(punt);
     this.userSelected = document.getElementById(position);
+    console.log('user selection: ', position);
     this.userSelected.innerHTML === '' ? this.userSelected.innerHTML = value : this.userSelected.innerHTML = '', this.userSelected.innerHTML = value;
     this._cardHelper.setAttributes(this.userSelected, {
       'data-card': value,
@@ -207,14 +198,17 @@ export class HomePage {
       this.teamOne += this.premi;
       this.teamOne += 1;
     } else if (this.winner.dreta > this.winner.tu && this.winner.dreta > this.winner.esquerra && this.winner.dreta > this.winner.dalt) {
+      this._iniciPartidaHelper.jugador_3_dreta.position = "dreta"; 
       this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_3_dreta)
       this.teamTwo += this.premi;
       this.teamTwo += 1;
     } else if (this.winner.esquerra > this.winner.tu && this.winner.esquerra > this.winner.dreta && this.winner.esquerra > this.winner.dalt) {
+      this._iniciPartidaHelper.jugador_2_esquerra.position = "esquerra"; 
       this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_2_esquerra)
       this.teamTwo += this.premi;
       this.teamTwo += 1;
     } else {
+      this._iniciPartidaHelper.jugador_4_dalt.position = "dalt"; 
       this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_4_dalt)
       this.teamOne += this.premi;
       this.teamOne += 1;
@@ -227,12 +221,12 @@ export class HomePage {
     this.puntuacioTeamA === '' ? this.puntuacioTeamA = "Puntuacio equip A " + this.teamOne : this.puntuacioTeamA = '', this.puntuacioTeamA = "Puntuacio equip A " + this.teamOne;
     this.puntuacioTeamB === '' ? this.puntuacioTeamB = "Puntuacio equip B " + this.teamTwo : this.puntuacioTeamB = '', this.puntuacioTeamB = "Puntuacio equip B " + this.teamTwo;
   }
-  sortidaDeCartaGuanyadora(user: UserConfig) {
+  sortidaDeCartaGuanyadora(user: CardGameClient.UserConfig) {
     console.log('USERUSER: ', user)
     this.flagMeWinner = false;
     if (user.cards.length != 0) {
       setTimeout(() => {
-        let firstcard:PilotConfig = user[Math.floor(Math.random() * user.cards.length)];
+        let firstcard: CardGameClient.PilotConfig = user.cards[Math.floor(Math.random() * user.cards.length)];
         this._valor = firstcard.valor;
         this._punt = firstcard.puntuacio;
         this._palo = firstcard.pal;

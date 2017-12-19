@@ -1,26 +1,14 @@
 import { Injectable } from "@angular/core";
 import { CardHelper } from "./card.helper";
 
-interface PilotConfig {
-    valor:number;
-    pal: string;
-    puntuacio: number;   
-}
-
-interface UserConfig {
-    cards: Array<PilotConfig>;
-    position: string;
-    sortida: string;
-}
-
 @Injectable()
 export class IniciPartidaHelper {
 
     public jugadorSortida: string;
-    public jugador_1_tu: UserConfig = <UserConfig>{};
-    public jugador_2_esquerra: UserConfig = <UserConfig>{};
-    public jugador_3_dreta: UserConfig = <UserConfig>{};
-    public jugador_4_dalt: UserConfig = <UserConfig>{};
+    public jugador_1_tu: CardGameClient.UserConfig = <CardGameClient.UserConfig>{};
+    public jugador_2_esquerra: CardGameClient.UserConfig = <CardGameClient.UserConfig>{};
+    public jugador_3_dreta: CardGameClient.UserConfig = <CardGameClient.UserConfig>{};
+    public jugador_4_dalt: CardGameClient.UserConfig = <CardGameClient.UserConfig>{};
 
     public jugadorDeInici: string;
     public triomfPals: any;
@@ -32,11 +20,11 @@ export class IniciPartidaHelper {
 
     constructor(private _cardHelper: CardHelper) {
 
-     }
+    }
 
     repartirCartaInitial() {
         let sortida: string[] = ['oros', 'espasses', 'copes', 'bastos'],
-            cartaDeSortida: PilotConfig = this._cardHelper.pilot.slice(Math.floor(Math.random() * 48))[0];
+            cartaDeSortida: CardGameClient.PilotConfig = this._cardHelper.pilot.slice(Math.floor(Math.random() * 48))[0];
 
         this._cardHelper.shuffle(sortida);
 
@@ -96,7 +84,7 @@ export class IniciPartidaHelper {
 
     }
 
-    repartirAndEscollir(user: UserConfig) {
+    repartirAndEscollir(user: CardGameClient.UserConfig) {
         console.log('USER: ', user);
         user.cards == this.jugador_4_dalt.cards ? this.jugadorDeInici = 'company' : this.jugadorDeInici = 'contrari'
         if (user.cards != this.jugador_1_tu.cards) {

@@ -72,9 +72,7 @@ var HomePage = (function () {
         this.winner = {};
         this.puntuacioTeamA = document.getElementById("puntuacioTeamA");
         this.puntuacioTeamB = document.getElementById("puntuacioTeamB");
-        setTimeout(function () {
-            _this._iniciPartidaHelper.repartirCartaInitial();
-        }, 2000);
+        this._iniciPartidaHelper.repartirCartaInitial();
         setTimeout(function () {
             _this.myCards();
         }, 4000);
@@ -138,11 +136,13 @@ var HomePage = (function () {
         }
     };
     HomePage.prototype.showCard = function (player, position, value, punt, pal, removedcard) {
+        console.log('PLAYER: ', player);
         player.splice(removedcard, 1);
         //Check and reset count
         this.count == 4 ? this.count = 1 : this.count += 1;
         this.winner[position] = parseInt(punt);
         this.userSelected = document.getElementById(position);
+        console.log('user selection: ', position);
         this.userSelected.innerHTML === '' ? this.userSelected.innerHTML = value : this.userSelected.innerHTML = '', this.userSelected.innerHTML = value;
         this._cardHelper.setAttributes(this.userSelected, {
             'data-card': value,
@@ -239,16 +239,19 @@ var HomePage = (function () {
             this.teamOne += 1;
         }
         else if (this.winner.dreta > this.winner.tu && this.winner.dreta > this.winner.esquerra && this.winner.dreta > this.winner.dalt) {
+            this._iniciPartidaHelper.jugador_3_dreta.position = "dreta";
             this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_3_dreta);
             this.teamTwo += this.premi;
             this.teamTwo += 1;
         }
         else if (this.winner.esquerra > this.winner.tu && this.winner.esquerra > this.winner.dreta && this.winner.esquerra > this.winner.dalt) {
+            this._iniciPartidaHelper.jugador_2_esquerra.position = "esquerra";
             this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_2_esquerra);
             this.teamTwo += this.premi;
             this.teamTwo += 1;
         }
         else {
+            this._iniciPartidaHelper.jugador_4_dalt.position = "dalt";
             this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_4_dalt);
             this.teamOne += this.premi;
             this.teamOne += 1;
@@ -267,7 +270,7 @@ var HomePage = (function () {
         this.flagMeWinner = false;
         if (user.cards.length != 0) {
             setTimeout(function () {
-                var firstcard = user[Math.floor(Math.random() * user.cards.length)];
+                var firstcard = user.cards[Math.floor(Math.random() * user.cards.length)];
                 _this._valor = firstcard.valor;
                 _this._punt = firstcard.puntuacio;
                 _this._palo = firstcard.pal;
@@ -335,6 +338,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+// interface PilotConfig {
+//     valor:number;
+//     pal: string;
+//     puntuacio: number;   
+// }
+// interface UserConfig {
+//     cards: Array<PilotConfig>;
+//     position: string;
+//     sortida: string;
+// }
 var CardHelper = (function () {
     function CardHelper() {
         //Baralla

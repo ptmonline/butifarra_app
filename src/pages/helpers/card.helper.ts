@@ -1,16 +1,16 @@
 import { Injectable } from "@angular/core";
 
-interface PilotConfig {
-    valor:number;
-    pal: string;
-    puntuacio: number;   
-}
+// interface PilotConfig {
+//     valor:number;
+//     pal: string;
+//     puntuacio: number;   
+// }
 
-interface UserConfig {
-    cards: Array<PilotConfig>;
-    position: string;
-    sortida: string;
-}
+// interface UserConfig {
+//     cards: Array<PilotConfig>;
+//     position: string;
+//     sortida: string;
+// }
 @Injectable()
 export class CardHelper {
 
@@ -52,7 +52,7 @@ export class CardHelper {
     }
 
     //Ordenar cartes per pal
-    ordenarCartesPerValor(user:UserConfig) {
+    ordenarCartesPerValor(user:CardGameClient.UserConfig) {
         console.log(typeof user);
         user.cards.sort((a, b) => {
             if (a.pal < b.pal) return -1;
