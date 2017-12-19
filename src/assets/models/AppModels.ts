@@ -11,4 +11,11 @@ declare namespace CardGameClient {
         position: string;
         sortida: string;
     }
+
+    export interface ValorJugada {
+        val: number;
+        punt: number;
+        pal: string;
+        rem: number;
+    }
 }

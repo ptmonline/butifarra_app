@@ -10,8 +10,8 @@ import { IniciPartidaHelper } from '../helpers/inicipartida.helper';
 })
 export class HomePage {
 
-  public card: any;
-  public tapete: any;
+  public card: HTMLElement;
+  public tapete: HTMLElement;
   public _paldejugada: string;
   public _valor: any;
   public _punt: any;
@@ -31,10 +31,11 @@ export class HomePage {
   public puntuacioTeamA: any = document.getElementById("puntuacioTeamA");
   public puntuacioTeamB: any = document.getElementById("puntuacioTeamB");
 
-  constructor(public navCtrl: NavController, public _cardHelper: CardHelper, public _iniciPartidaHelper: IniciPartidaHelper) {
+  public valorJugada: CardGameClient.ValorJugada = <CardGameClient.ValorJugada>{};
+  public valorSegonJugada: CardGameClient.ValorJugada = <CardGameClient.ValorJugada>{};
 
-      this._iniciPartidaHelper.repartirCartaInitial();
-    
+  constructor(public navCtrl: NavController, public _cardHelper: CardHelper, public _iniciPartidaHelper: IniciPartidaHelper) {
+    this._iniciPartidaHelper.repartirCartaInitial();
     setTimeout(() => {
       this.myCards();
     }, 4000)
@@ -43,7 +44,7 @@ export class HomePage {
   myCards() {
     for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.cards.length; x++) {
       this.card = document.createElement('div');
-      this.card.innerHTML = this._iniciPartidaHelper.jugador_1_tu.cards[x].valor;
+      this.card.innerText += this._iniciPartidaHelper.jugador_1_tu.cards[x].valor;
 
       this._cardHelper.setAttributes(this.card, {
         'data-pal': this._iniciPartidaHelper.jugador_1_tu.cards[x].pal,
@@ -54,55 +55,62 @@ export class HomePage {
 
       this.tapete = document.getElementById('user1');
       this.tapete.appendChild(this.card);
+      this.setActionHand(this.card)
+    }
+  }
+  setActionHand(card) {
+    card.addEventListener('click', evt => {
 
-      this.card.addEventListener('click', evt => {
-        let val, punt, pal;
-        val = evt.target.getAttribute('data-val');
-        punt = evt.target.getAttribute('data-punt');
-        pal = evt.target.getAttribute('data-pal');
-        console.log(val)
-        for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.cards.length; x++) {
-          if (this._iniciPartidaHelper.jugador_1_tu.cards[x].pal == pal && this._iniciPartidaHelper.jugador_1_tu.cards[x].valor == val) {
-            this.rem = this._iniciPartidaHelper.jugador_1_tu.cards.indexOf(this._iniciPartidaHelper.jugador_1_tu.cards[x])
-          }
+      this.valorJugada.val = parseInt((<Element>evt.target).getAttribute('data-val'));
+      this.valorJugada.punt = parseInt((<Element>evt.target).getAttribute('data-punt'));
+      this.valorJugada.pal = (<Element>evt.target).getAttribute('data-pal');
+
+
+
+      for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.cards.length; x++) {
+        if (this._iniciPartidaHelper.jugador_1_tu.cards[x].pal == this.valorJugada.pal && this._iniciPartidaHelper.jugador_1_tu.cards[x].valor == this.valorJugada.val) {
+          this.rem = this._iniciPartidaHelper.jugador_1_tu.cards.indexOf(this._iniciPartidaHelper.jugador_1_tu.cards[x]);
+          console.log('TU: ' + this._iniciPartidaHelper.jugador_1_tu.cards[x].pal + ' ' + 'JUGADA TAULA: ' + this.valorJugada.pal)
         }
-        if (pal == this._palo && punt > this._punt) {
-          this._valor = val;
-          this._punt = punt;
-          this._palo = pal
-        }
-        //Penalitzar moviment incorrecta
-        if (!this.flagMeWinner) {
-          if (pal != this._triomf && pal != this._paldejugada) {
-            for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.cards.length; x++) {
-              if (this._iniciPartidaHelper.jugador_1_tu.cards[x].pal == this._paldejugada || this._iniciPartidaHelper.jugador_1_tu.cards[x].pal == this._triomf) {
-                this.penalitzacio = "penalitzacio"
-                this.teamOne -= 1;
-                this.teamTwo += 1;
-              }
+      }
+      if (this.valorJugada.pal == this._palo && this.valorJugada.punt > this._punt) {
+        this._valor = this.valorJugada.val;
+        this._punt = this.valorJugada.punt;
+        this._palo = this.valorJugada.pal
+      }
+      //Penalitzar moviment incorrecta
+      if (!this.flagMeWinner) {
+        if (this.valorJugada.pal != this._triomf && this.valorJugada.pal != this._paldejugada) {
+          for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.cards.length; x++) {
+            if (this._iniciPartidaHelper.jugador_1_tu.cards[x].pal == this._paldejugada || this._iniciPartidaHelper.jugador_1_tu.cards[x].pal == this._triomf) {
+              this.penalitzacio = "penalitzacio"
+              this.teamOne -= 1;
+              this.teamTwo += 1;
             }
           }
         }
-        if (this.flagMeWinner) {
-          this._paldejugada = pal;
-          this.seleccionatBasa = 'EL PAL DE SORTIDA ES ' + this._paldejugada;
-          this.basaSortidaGuanyador === '' ? this.basaSortidaGuanyador = "Jugador de sortida tu" : this.basaSortidaGuanyador = '', this.basaSortidaGuanyador = "Jugador de sortida tu";
-          this._valor = val;
-          this._punt = punt;
-          this._palo = pal
-          this.showCard(this._iniciPartidaHelper.jugador_1_tu.cards, 'tu', val, punt, pal, this.rem);
-          // this.remove();
-        } else {
-          this.showCard(this._iniciPartidaHelper.jugador_1_tu.cards, 'tu', val, punt, pal, this.rem);
-          // this.remove();
-        }
-      })
-    }
+      }
+      if (this.flagMeWinner) {
+        this._paldejugada = this.valorJugada.pal;
+        this.seleccionatBasa = 'EL PAL DE SORTIDA ES ' + this._paldejugada;
+        this.basaSortidaGuanyador === '' ? this.basaSortidaGuanyador = "Jugador de sortida tu" : this.basaSortidaGuanyador = '', this.basaSortidaGuanyador = "Jugador de sortida tu";
+        this._valor = this.valorJugada.val;
+        this._punt = this.valorJugada.punt;
+        this._palo = this.valorJugada.pal;
+        console.log('REM1: ',this.rem)
+        this.showCard(this._iniciPartidaHelper.jugador_1_tu.cards, 'tu', this.valorJugada.val, this.valorJugada.punt, this.valorJugada.pal, this.rem);
+        card.remove();
+      } else {
+        console.log('REM2: ',this.rem)
+        this.showCard(this._iniciPartidaHelper.jugador_1_tu.cards, 'tu', this.valorJugada.val, this.valorJugada.punt, this.valorJugada.pal, this.rem);
+        card.remove();
+      }
+    })
   }
-
   showCard(player, position, value, punt, pal, removedcard) {
-    console.log('PLAYER: ',player)
+    console.log('PLAYER1: ',player.length);
     player.splice(removedcard, 1);
+    console.log('PLAYER2: ',player.length);
     //Check and reset count
     this.count == 4 ? this.count = 1 : this.count += 1;
     this.winner[position] = parseInt(punt);
@@ -198,17 +206,17 @@ export class HomePage {
       this.teamOne += this.premi;
       this.teamOne += 1;
     } else if (this.winner.dreta > this.winner.tu && this.winner.dreta > this.winner.esquerra && this.winner.dreta > this.winner.dalt) {
-      this._iniciPartidaHelper.jugador_3_dreta.position = "dreta"; 
+      this._iniciPartidaHelper.jugador_3_dreta.position = "dreta";
       this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_3_dreta)
       this.teamTwo += this.premi;
       this.teamTwo += 1;
     } else if (this.winner.esquerra > this.winner.tu && this.winner.esquerra > this.winner.dreta && this.winner.esquerra > this.winner.dalt) {
-      this._iniciPartidaHelper.jugador_2_esquerra.position = "esquerra"; 
+      this._iniciPartidaHelper.jugador_2_esquerra.position = "esquerra";
       this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_2_esquerra)
       this.teamTwo += this.premi;
       this.teamTwo += 1;
     } else {
-      this._iniciPartidaHelper.jugador_4_dalt.position = "dalt"; 
+      this._iniciPartidaHelper.jugador_4_dalt.position = "dalt";
       this.sortidaDeCartaGuanyadora(this._iniciPartidaHelper.jugador_4_dalt)
       this.teamOne += this.premi;
       this.teamOne += 1;
