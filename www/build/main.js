@@ -103,7 +103,6 @@ var HomePage = (function () {
             for (var x = 0; x < _this._iniciPartidaHelper.jugador_1_tu.cards.length; x++) {
                 if (_this._iniciPartidaHelper.jugador_1_tu.cards[x].pal == _this.valorJugada.pal && _this._iniciPartidaHelper.jugador_1_tu.cards[x].valor == _this.valorJugada.val) {
                     _this.rem = _this._iniciPartidaHelper.jugador_1_tu.cards.indexOf(_this._iniciPartidaHelper.jugador_1_tu.cards[x]);
-                    console.log('TU: ' + _this._iniciPartidaHelper.jugador_1_tu.cards[x].pal + ' ' + 'JUGADA TAULA: ' + _this.valorJugada.pal);
                 }
             }
             if (_this.valorJugada.pal == _this._palo && _this.valorJugada.punt > _this._punt) {
@@ -130,32 +129,26 @@ var HomePage = (function () {
                 _this._valor = _this.valorJugada.val;
                 _this._punt = _this.valorJugada.punt;
                 _this._palo = _this.valorJugada.pal;
-                console.log('REM1: ', _this.rem);
                 _this.showCard(_this._iniciPartidaHelper.jugador_1_tu.cards, 'tu', _this.valorJugada.val, _this.valorJugada.punt, _this.valorJugada.pal, _this.rem);
                 card.remove();
             }
             else {
-                console.log('REM2: ', _this.rem);
                 _this.showCard(_this._iniciPartidaHelper.jugador_1_tu.cards, 'tu', _this.valorJugada.val, _this.valorJugada.punt, _this.valorJugada.pal, _this.rem);
                 card.remove();
             }
         });
     };
     HomePage.prototype.showCard = function (player, position, value, punt, pal, removedcard) {
-        console.log('PLAYER1: ', player.length);
         player.splice(removedcard, 1);
-        console.log('PLAYER2: ', player.length);
         //Check and reset count
         this.count == 4 ? this.count = 1 : this.count += 1;
         this.winner[position] = parseInt(punt);
         this.userSelected = document.getElementById(position);
-        console.log('user selection: ', position);
         this.userSelected.innerHTML === '' ? this.userSelected.innerHTML = value : this.userSelected.innerHTML = '', this.userSelected.innerHTML = value;
         this._cardHelper.setAttributes(this.userSelected, {
             'data-card': value,
             'class': 'tapetejugada carta __' + pal
         });
-        console.log(this.userSelected);
         this.nextHandSelect(this.count, position, value, punt, pal);
     };
     HomePage.prototype.nextHandSelect = function (count, position, value, punt, pal) {
@@ -178,7 +171,6 @@ var HomePage = (function () {
     };
     HomePage.prototype.nextHand = function (user, position, value, punt, pal) {
         var _this = this;
-        console.log('USERNEXTHAND: ', user);
         setTimeout(function () {
             _this.startPlay(user, position, value, punt, pal);
         }, 2000);
@@ -273,7 +265,6 @@ var HomePage = (function () {
     };
     HomePage.prototype.sortidaDeCartaGuanyadora = function (user) {
         var _this = this;
-        console.log('USERUSER: ', user);
         this.flagMeWinner = false;
         if (user.cards.length != 0) {
             setTimeout(function () {
@@ -319,9 +310,10 @@ var HomePage = (function () {
             selector: 'page-home',template:/*ion-inline-start:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/`<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>\n\n      Ionic Blank\n\n    </ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <p>\n\n    {{_iniciPartidaHelper.jugadorSortida}}\n\n  </p>\n\n  <aside class="texte-seleccio">\n\n    <h3>L A &nbsp;&nbsp;B U T I F A R R A</h3>\n\n    <div id="seleccionat" class="pal-seleccionat">{{_iniciPartidaHelper.pal_seleccionat}}</div>\n\n    <div id="seleccionatPosition" class="pal-seleccionat">{{_iniciPartidaHelper.pal_posicio}}</div>\n\n    <div id="seleccionatBasa" class="pal-seleccionat">{{seleccionatBasa}}</div>\n\n    <div id="basaSortidaGuanyador" class="pal-seleccionat">{{basaSortidaGuanyador}}</div>\n\n    <div id="puntuacioTeamA" class="pal-seleccionat">&nbsp;</div>\n\n    <div id="puntuacioTeamB" class="pal-seleccionat">&nbsp;</div>\n\n    <div id="penalitzacio" class="pal-seleccionat">{{penalitzacio}}</div>\n\n    <div id="novaPartida" class="pal-seleccionat">clickar per a nova partida</div>\n\n  </aside>\n\n  <section class="jugada">\n\n    <div id="esquerra" class="tapetejugada carta"></div>\n\n    <div id="dreta" class="tapetejugada carta"></div>\n\n    <div id="dalt" class="tapetejugada carta"></div>\n\n    <div id="tu" class="tapetejugada carta"></div>\n\n  </section>\n\n  <section class="seleccio" *ngIf="_iniciPartidaHelper.seleccioInit">\n\n    <h3>Selecciona Triomf</h3>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'oros\')">OROS</div>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'copes\')">COPES</div>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'espasses\')">ESPASSES</div>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'bastos\')">BASTOS</div>\n\n    <div class="pals_triomf" (click)="_iniciPartidaHelper.palSeleccionat(\'butifarra\')">BUTIFARRA</div>\n\n  </section>\n\n  <section id="user1"></section>\n\n\n\n</ion-content>`/*ion-inline-end:"C:\Users\ce9\Documents\personal\butifarra_app\src\pages\home\home.html"*/,
             providers: [__WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */], __WEBPACK_IMPORTED_MODULE_3__helpers_inicipartida_helper__["a" /* IniciPartidaHelper */]]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */], __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */], __WEBPACK_IMPORTED_MODULE_3__helpers_inicipartida_helper__["a" /* IniciPartidaHelper */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__helpers_card_helper__["a" /* CardHelper */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__helpers_inicipartida_helper__["a" /* IniciPartidaHelper */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__helpers_inicipartida_helper__["a" /* IniciPartidaHelper */]) === "function" && _c || Object])
     ], HomePage);
     return HomePage;
+    var _a, _b, _c;
 }());
 
 //# sourceMappingURL=home.js.map

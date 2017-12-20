@@ -70,7 +70,6 @@ export class HomePage {
       for (let x = 0; x < this._iniciPartidaHelper.jugador_1_tu.cards.length; x++) {
         if (this._iniciPartidaHelper.jugador_1_tu.cards[x].pal == this.valorJugada.pal && this._iniciPartidaHelper.jugador_1_tu.cards[x].valor == this.valorJugada.val) {
           this.rem = this._iniciPartidaHelper.jugador_1_tu.cards.indexOf(this._iniciPartidaHelper.jugador_1_tu.cards[x]);
-          console.log('TU: ' + this._iniciPartidaHelper.jugador_1_tu.cards[x].pal + ' ' + 'JUGADA TAULA: ' + this.valorJugada.pal)
         }
       }
       if (this.valorJugada.pal == this._palo && this.valorJugada.punt > this._punt) {
@@ -97,31 +96,25 @@ export class HomePage {
         this._valor = this.valorJugada.val;
         this._punt = this.valorJugada.punt;
         this._palo = this.valorJugada.pal;
-        console.log('REM1: ',this.rem)
         this.showCard(this._iniciPartidaHelper.jugador_1_tu.cards, 'tu', this.valorJugada.val, this.valorJugada.punt, this.valorJugada.pal, this.rem);
         card.remove();
       } else {
-        console.log('REM2: ',this.rem)
         this.showCard(this._iniciPartidaHelper.jugador_1_tu.cards, 'tu', this.valorJugada.val, this.valorJugada.punt, this.valorJugada.pal, this.rem);
         card.remove();
       }
     })
   }
   showCard(player, position, value, punt, pal, removedcard) {
-    console.log('PLAYER1: ',player.length);
     player.splice(removedcard, 1);
-    console.log('PLAYER2: ',player.length);
     //Check and reset count
     this.count == 4 ? this.count = 1 : this.count += 1;
     this.winner[position] = parseInt(punt);
     this.userSelected = document.getElementById(position);
-    console.log('user selection: ', position);
     this.userSelected.innerHTML === '' ? this.userSelected.innerHTML = value : this.userSelected.innerHTML = '', this.userSelected.innerHTML = value;
     this._cardHelper.setAttributes(this.userSelected, {
       'data-card': value,
       'class': 'tapetejugada carta __' + pal
     })
-    console.log(this.userSelected);
     this.nextHandSelect(this.count, position, value, punt, pal)
   }
 
@@ -143,7 +136,6 @@ export class HomePage {
     }
   }
   nextHand(user, position, value, punt, pal) {
-    console.log('USERNEXTHAND: ', user)
     setTimeout(() => {
       this.startPlay(user, position, value, punt, pal)
     }, 2000);
@@ -230,7 +222,6 @@ export class HomePage {
     this.puntuacioTeamB === '' ? this.puntuacioTeamB = "Puntuacio equip B " + this.teamTwo : this.puntuacioTeamB = '', this.puntuacioTeamB = "Puntuacio equip B " + this.teamTwo;
   }
   sortidaDeCartaGuanyadora(user: CardGameClient.UserConfig) {
-    console.log('USERUSER: ', user)
     this.flagMeWinner = false;
     if (user.cards.length != 0) {
       setTimeout(() => {
